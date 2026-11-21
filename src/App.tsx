@@ -18,6 +18,7 @@ const ClientDetailPage = lazy(() => import('./pages/ClientDetail').then((m) => (
 const AnalyticsPage = lazy(() => import('./pages/Analytics').then((m) => ({ default: m.AnalyticsPage })))
 const SettingsPage = lazy(() => import('./pages/Settings').then((m) => ({ default: m.SettingsPage })))
 const OnboardingPage = lazy(() => import('./pages/Onboarding').then((m) => ({ default: m.OnboardingPage })))
+const LandingPage = lazy(() => import('./pages/Landing').then((m) => ({ default: m.LandingPage })))
 const PublicInvoicePage = lazy(() => import('./pages/PublicInvoice').then((m) => ({ default: m.PublicInvoicePage })))
 
 function PageFallback() {
@@ -51,10 +52,12 @@ function PublicOnly({ children }: { children: ReactNode }) {
   return <>{children}</>
 }
 
+/** Signed in → the app. Signed out → the public product page. */
 function Root() {
   const { session, ready } = useAuth()
   if (!ready) return <FullFallback />
-  return <Navigate to={session ? '/dashboard' : '/login'} replace />
+  if (session) return <Navigate to="/dashboard" replace />
+  return <LandingPage />
 }
 
 export function App() {

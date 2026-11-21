@@ -10,7 +10,7 @@ function AuthLayout({ title, subtitle, children, footer }: { title: string; subt
   return (
     <div className="grid min-h-dvh lg:grid-cols-[1fr_minmax(0,560px)]">
       <aside className="hidden flex-col justify-between border-r border-line px-12 py-10 lg:flex">
-        <Logo />
+        <Link to="/" aria-label="PayFlow home" className="w-max"><Logo /></Link>
         <div className="max-w-md">
           <p className="display text-3xl leading-[1.1] text-ink">Create invoices. Track payments. Know what’s outstanding.</p>
           <dl className="mt-10 grid grid-cols-3 gap-6 border-t border-line pt-6 text-sm">
@@ -22,7 +22,7 @@ function AuthLayout({ title, subtitle, children, footer }: { title: string; subt
         <p className="text-xs text-muted">For freelancers and independent professionals.</p>
       </aside>
       <main className="flex flex-col px-5 py-8 sm:px-10">
-        <div className="lg:hidden"><Logo /></div>
+        <div className="lg:hidden"><Link to="/" aria-label="PayFlow home"><Logo /></Link></div>
         <div className="my-auto w-full max-w-sm self-center py-10">
           <h1 className="display text-2xl">{title}</h1>
           {subtitle && <p className="mt-2 text-sm text-muted">{subtitle}</p>}

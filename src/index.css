@@ -148,6 +148,64 @@
   animation: grow 420ms var(--ease-out) both;
 }
 
+/* ── Landing page ─────────────────────────────────────────────────────────
+   Deep ink-navy stage with brass light; paper sections below. */
+.pf-hero {
+  background:
+    radial-gradient(70% 90% at 85% 10%, rgb(201 168 106 / 0.12), transparent 60%),
+    radial-gradient(60% 80% at 10% 100%, rgb(127 162 214 / 0.14), transparent 60%),
+    #0f1c30;
+}
+.pf-flow-line {
+  stroke-dasharray: 260 1400;
+  animation: pf-flow 11s linear infinite;
+}
+@keyframes pf-flow {
+  from { stroke-dashoffset: 1660; }
+  to { stroke-dashoffset: 0; }
+}
+.pf-mask {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: top;
+  padding-bottom: 0.1em;
+  margin-bottom: -0.1em;
+}
+.pf-word {
+  display: inline-block;
+  animation: pf-word 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+@keyframes pf-word {
+  from { transform: translateY(105%); opacity: 0; }
+}
+.pf-in {
+  animation: rise 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.pf-pop {
+  animation: pf-pop 0.35s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+@keyframes pf-pop {
+  from { opacity: 0; transform: translateY(4px) scale(0.98); }
+}
+.pf-tilt {
+  transform: perspective(1200px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+  transition: transform 0.25s ease-out;
+  will-change: transform;
+}
+.pf-reveal {
+  transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1), transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.pf-reveal[data-seen='false'] {
+  opacity: 0;
+  transform: translateY(14px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pf-flow-line { animation: none; stroke-dasharray: none; }
+  .pf-reveal[data-seen='false'] { opacity: 1; transform: none; }
+  .pf-tilt { transform: none; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
