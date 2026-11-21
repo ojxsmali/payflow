@@ -1,5 +1,7 @@
 import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
+import { motion } from 'motion/react'
+import { spotlight } from '../lib/effects'
 import { ArrowRight, FilePlus2, UserPlus } from 'lucide-react'
 import { useProfile } from '../auth/AuthProvider'
 import { useBusinessData } from '../hooks/useBusinessData'
@@ -54,7 +56,7 @@ export function DashboardPage() {
       />
 
       {/* Ledger strip: four numbers that answer "where do I stand?" — each opens the invoices behind it */}
-      <div className="grid grid-cols-2 border-y border-line lg:grid-cols-4">
+      <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
         <Figure
           label={`Collected in ${month}`}
           value={s && formatMoney(s.collectedThisMonth, currency)}
@@ -62,6 +64,7 @@ export function DashboardPage() {
             ? s.collectedLastMonth === 0 ? `Nothing collected in ${lastMonth}` : ''
             : <span className={s.monthChange >= 0 ? 'text-success' : 'text-danger'}>{s.monthChange >= 0 ? '+' : '−'}{Math.abs(s.monthChange).toFixed(1)}% vs {lastMonth}</span>)}
           to="/analytics"
+          hero
         />
         <Figure label="Outstanding" value={s && formatMoney(s.outstanding, currency)} sub={s && plural(s.outstandingCount, 'open invoice')} to="/invoices?status=open" />
         <Figure label="Overdue" tone={s && s.overdue > 0 ? 'danger' : undefined} value={s && formatMoney(s.overdue, currency)} sub={s && (s.overdueCount ? plural(s.overdueCount, 'invoice') : 'Nothing overdue')} to="/invoices?status=overdue" />
@@ -107,26 +110,34 @@ function plural(n: number, word: string) {
   return `${n} ${word}${n === 1 ? '' : 's'}`
 }
 
-function Figure({ label, value, sub, to, tone }: { label: string; value?: string | false | null; sub?: React.ReactNode; to: string; tone?: 'danger' }) {
+function Figure({ label, value, sub, to, tone, hero }: { label: string; value?: string | false | null; sub?: React.ReactNode; to: string; tone?: 'danger'; hero?: boolean }) {
   return (
-    <Link
-      to={to}
-      className="group relative border-line px-1 py-5 transition-colors odd:pr-4 even:border-l even:pl-4 hover:bg-surface/70 max-lg:[&:nth-child(n+3)]:border-t lg:border-l lg:px-5 lg:first:border-l-0 lg:first:pl-1"
-    >
-      <p className="label flex items-center justify-between">
-        {label}
-        <ArrowRight className="size-3.5 -translate-x-1 opacity-0 transition-all group-hover:translate-x-0 group-hover:opacity-100" aria-hidden />
-      </p>
-      {value ? (
-        <p className={cx('num mt-2 text-xl font-semibold tracking-[-0.01em] sm:text-[1.75rem]', tone === 'danger' ? 'text-danger' : 'text-ink')}>{value}</p>
-      ) : (
-        <Skeleton className="mt-3 h-7 w-28" />
-      )}
-      <p className="mt-1 min-h-5 text-sm text-muted">{sub}</p>
-    </Link>
+    <motion.div whileHover={{ y: -4 }} whileTap={{ scale: 0.97 }} transition={{ type: 'spring', stiffness: 420, damping: 24 }} className={hero ? 'col-span-2 lg:col-span-1' : ''}>
+      <Link
+        to={to}
+        onPointerMove={spotlight}
+        className={cx(
+          'pf-spot group flex h-full flex-col rounded-lg border p-5 transition-shadow',
+          hero
+            ? 'overflow-hidden border-transparent bg-night text-white shadow-[0_24px_50px_-20px_rgb(91_61_245/0.6)]'
+            : 'border-line bg-surface hover:shadow-[var(--shadow-pop)]',
+        )}
+      >
+        {hero && <span className="pointer-events-none absolute -right-10 -top-14 size-40 rounded-full bg-accent/50 blur-3xl" aria-hidden />}
+        <p className={cx('relative flex items-center justify-between text-xs font-medium', hero ? 'text-[#bdb8d6]' : 'text-muted')}>
+          {label}
+          <ArrowRight className="size-3.5 -translate-x-1 opacity-0 transition-all duration-300 group-hover:translate-x-0 group-hover:opacity-100" aria-hidden />
+        </p>
+        {value ? (
+          <p className={cx('num relative mt-4 font-display text-2xl font-semibold tracking-[-0.04em] sm:text-[1.9rem]', hero ? 'text-white' : tone === 'danger' ? 'text-danger' : 'text-ink')}>{value}</p>
+        ) : (
+          <Skeleton className="mt-4 h-8 w-28" />
+        )}
+        <p className={cx('relative mt-1 min-h-5 text-sm', hero ? 'text-[#a9a4c4] [&_.text-success]:text-brass [&_.text-danger]:text-[#ff8f80]' : 'text-muted')}>{sub}</p>
+      </Link>
+    </motion.div>
   )
 }
-
 function AttentionList({ items, drafts }: { items: InvoiceRow[]; drafts: InvoiceRow[] }) {
   if (!items.length && !drafts.length)
     return <p className="py-6 text-sm text-muted">Nothing needs you right now. Overdue and soon-due invoices will show up here.</p>

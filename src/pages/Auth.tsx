@@ -3,23 +3,29 @@ import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
 import { humanError } from '../lib/errors'
 import { Button, ErrorNotice, Field, Input } from '../components/ui'
-import { Logo } from '../components/layout/Logo'
+import { Logo, LogoMark } from '../components/layout/Logo'
 import { useAuth } from '../auth/AuthProvider'
 
 function AuthLayout({ title, subtitle, children, footer }: { title: string; subtitle?: string; children: ReactNode; footer?: ReactNode }) {
   return (
     <div className="grid min-h-dvh lg:grid-cols-[1fr_minmax(0,560px)]">
-      <aside className="hidden flex-col justify-between border-r border-line px-12 py-10 lg:flex">
-        <Link to="/" aria-label="PayFlow home" className="w-max"><Logo /></Link>
-        <div className="max-w-md">
-          <p className="display text-3xl leading-[1.1] text-ink">Create invoices. Track payments. Know what’s outstanding.</p>
-          <dl className="mt-10 grid grid-cols-3 gap-6 border-t border-line pt-6 text-sm">
-            <div><dt className="label">Draft</dt><dd className="mt-1 text-ink-2">Build the invoice, preview the PDF.</dd></div>
-            <div><dt className="label">Send</dt><dd className="mt-1 text-ink-2">Email it or share a private link.</dd></div>
-            <div><dt className="label">Get paid</dt><dd className="mt-1 text-ink-2">Record payments, see what’s still due.</dd></div>
+      <aside className="relative hidden flex-col justify-between overflow-hidden bg-night px-12 py-10 text-white lg:flex">
+        <div className="pf-grid pointer-events-none absolute inset-0" aria-hidden />
+        <div className="pointer-events-none absolute -left-40 -top-40 size-[520px] rounded-full bg-[radial-gradient(circle,rgb(91_61_245/0.5),transparent_60%)] blur-2xl" aria-hidden />
+        <div className="pointer-events-none absolute -bottom-40 -right-20 size-[420px] rounded-full bg-[radial-gradient(circle,rgb(46_230_166/0.18),transparent_65%)] blur-2xl" aria-hidden />
+        <Link to="/" aria-label="PayFlow home" className="relative flex w-max items-center gap-2.5">
+          <LogoMark className="size-8" />
+          <span className="font-display text-[17px] font-semibold tracking-[-0.03em]">PayFlow</span>
+        </Link>
+        <div className="relative max-w-md">
+          <p className="font-display text-4xl font-semibold leading-[1.05] tracking-[-0.045em]">Create invoices. Track payments. Know what’s <span className="pf-shine">outstanding</span>.</p>
+          <dl className="mt-10 grid grid-cols-3 gap-6 border-t border-white/10 pt-6 text-sm">
+            <div><dt className="text-xs font-semibold uppercase tracking-[0.12em] text-brass">Draft</dt><dd className="mt-1.5 text-[#bdb8d6]">Build the invoice, preview the PDF.</dd></div>
+            <div><dt className="text-xs font-semibold uppercase tracking-[0.12em] text-brass">Send</dt><dd className="mt-1.5 text-[#bdb8d6]">Email it or share a private link.</dd></div>
+            <div><dt className="text-xs font-semibold uppercase tracking-[0.12em] text-brass">Get paid</dt><dd className="mt-1.5 text-[#bdb8d6]">Record payments, see what’s still due.</dd></div>
           </dl>
         </div>
-        <p className="text-xs text-muted">For freelancers and independent professionals.</p>
+        <p className="relative text-xs text-[#8d88a8]">For freelancers and independent professionals.</p>
       </aside>
       <main className="flex flex-col px-5 py-8 sm:px-10">
         <div className="lg:hidden"><Link to="/" aria-label="PayFlow home"><Logo /></Link></div>

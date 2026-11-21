@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { LoaderCircle } from 'lucide-react'
 import type { InvoiceStatus } from '../../types'
 import { STATUS_META } from '../../lib/status'
+import { ripple } from '../../lib/effects'
 
 export function cx(...c: (string | false | null | undefined)[]) {
   return c.filter(Boolean).join(' ')
@@ -11,7 +12,7 @@ export function cx(...c: (string | false | null | undefined)[]) {
 // ── Button ──────────────────────────────────────────────────────────────────
 type Variant = 'primary' | 'secondary' | 'ghost' | 'danger'
 const variants: Record<Variant, string> = {
-  primary: 'bg-accent text-surface hover:bg-accent-hover border border-accent',
+  primary: 'bg-accent text-surface border border-accent hover:bg-accent-hover hover:shadow-[0_8px_24px_-6px_rgb(91_61_245/0.55)]',
   secondary: 'bg-surface text-ink border border-line-strong hover:border-ink-2/50 hover:bg-white',
   ghost: 'text-ink-2 hover:text-ink hover:bg-sunken border border-transparent',
   danger: 'bg-surface text-danger border border-line-strong hover:border-danger/60 hover:bg-danger-soft/50',
@@ -27,8 +28,8 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 }
 export function Button({ variant = 'secondary', size = 'md', loading, icon, to, className, children, disabled, ...rest }: ButtonProps) {
   const cls = cx(
-    'inline-flex items-center justify-center rounded-md font-medium whitespace-nowrap select-none',
-    'transition-[background-color,border-color,color,transform] duration-[var(--duration-fast)] active:translate-y-px',
+    'pf-press relative isolate overflow-hidden inline-flex items-center justify-center rounded-md font-medium whitespace-nowrap select-none',
+    'transition-[background-color,border-color,color,transform,box-shadow] duration-[var(--duration-base)] ease-[var(--ease-spring)]',
     'disabled:opacity-50 disabled:pointer-events-none',
     variants[variant], sizes[size], className,
   )
@@ -38,9 +39,9 @@ export function Button({ variant = 'secondary', size = 'md', loading, icon, to, 
       {children}
     </>
   )
-  if (to) return <Link to={to} className={cls}>{inner}</Link>
+  if (to) return <Link to={to} className={cls} onPointerDown={ripple}>{inner}</Link>
   return (
-    <button className={cls} disabled={disabled || loading} aria-busy={loading || undefined} {...rest}>
+    <button className={cls} disabled={disabled || loading} aria-busy={loading || undefined} {...rest} onPointerDown={(e) => { ripple(e); rest.onPointerDown?.(e) }}>
       {inner}
     </button>
   )
@@ -145,12 +146,13 @@ export function Segmented<T extends string>({ value, onChange, options, label, s
 
 // ── Status ──────────────────────────────────────────────────────────────────
 const toneText = { muted: 'text-muted', accent: 'text-accent', success: 'text-success', warning: 'text-warning', danger: 'text-danger' }
+const toneBg = { muted: 'bg-sunken', accent: 'bg-accent-soft', success: 'bg-success-soft', warning: 'bg-warning-soft', danger: 'bg-danger-soft' }
 const toneDot = { muted: 'bg-muted/60', accent: 'bg-accent', success: 'bg-success', warning: 'bg-warning', danger: 'bg-danger' }
 export function StatusBadge({ status, className }: { status: InvoiceStatus; className?: string }) {
   const m = STATUS_META[status]
   return (
-    <span className={cx('inline-flex items-center gap-1.5 text-sm font-medium whitespace-nowrap', toneText[m.tone], className)} title={m.help}>
-      <span aria-hidden className={cx('size-1.5 rounded-full', toneDot[m.tone], status === 'viewed' && 'ring-2 ring-accent/25')} />
+    <span className={cx('inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-semibold whitespace-nowrap', toneText[m.tone], toneBg[m.tone], className)} title={m.help}>
+      <span aria-hidden className={cx('pf-dot relative size-1.5 rounded-full', toneDot[m.tone], (status === 'sent' || status === 'viewed' || status === 'overdue') && 'pf-pulse')} />
       <span className={status === 'cancelled' ? 'line-through decoration-muted/50' : undefined}>{m.label}</span>
     </span>
   )
@@ -170,7 +172,7 @@ export function PageHeader({ title, eyebrow, meta, actions }: { title: ReactNode
     <header className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
       <div className="min-w-0">
         {eyebrow && <div className="eyebrow mb-2">{eyebrow}</div>}
-        <h1 className="display text-2xl leading-tight text-ink break-words">{title}</h1>
+        <h1 className="display text-[2rem] leading-[1.05] text-ink break-words sm:text-[2.6rem]">{title}</h1>
         {meta && <div className="mt-2 text-sm text-muted">{meta}</div>}
       </div>
       {actions && <div className="flex flex-wrap items-center gap-2 no-print">{actions}</div>}

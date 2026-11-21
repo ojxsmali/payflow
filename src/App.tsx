@@ -1,5 +1,6 @@
 import { lazy, Suspense, type ReactNode } from 'react'
 import { BrowserRouter, Navigate, Route, Routes, useLocation } from 'react-router-dom'
+import { MotionConfig } from 'motion/react'
 import { AuthProvider, useAuth } from './auth/AuthProvider'
 import { ToastProvider } from './components/ui/Toast'
 import { AppShell } from './components/layout/AppShell'
@@ -63,6 +64,7 @@ function Root() {
 export function App() {
   if (!isConfigured) return <SetupNeeded />
   return (
+    <MotionConfig reducedMotion="user">
     <BrowserRouter>
       <AuthProvider>
         <ToastProvider>
@@ -93,6 +95,7 @@ export function App() {
         </ToastProvider>
       </AuthProvider>
     </BrowserRouter>
+    </MotionConfig>
   )
 }
 

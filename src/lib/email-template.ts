@@ -27,7 +27,7 @@ export function renderInvoiceEmail(i: InvoiceEmailInput) {
     .split(/\n{2,}/)
     .map((p) => `<p style="margin:0 0 16px">${esc(p).replace(/\n/g, '<br>')}</p>`)
     .join('')
-  const html = `<!doctype html><html><body style="margin:0;background:#f5f3ee;padding:32px 16px;font-family:'IBM Plex Sans',Helvetica,Arial,sans-serif;color:#1a1a18">
+  const html = `<!doctype html><html><body style="margin:0;background:#f5f4fa;padding:32px 16px;font-family:'IBM Plex Sans',Helvetica,Arial,sans-serif;color:#1a1a18">
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr><td align="center">
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;background:#fdfcfa;border:1px solid #e2ded5;border-radius:8px">
 <tr><td style="padding:28px 32px 8px;font-size:15px;line-height:1.6">${paragraphs}</td></tr>
@@ -38,7 +38,7 @@ export function renderInvoiceEmail(i: InvoiceEmailInput) {
     <tr><td style="padding:0 0 14px;font-size:13px;color:#6f6d66">Due date</td><td align="right" style="padding:0 0 14px;font-size:13px">${esc(i.dueDate)}</td></tr>
   </table>
 </td></tr>
-<tr><td style="padding:20px 32px 32px"><a href="${esc(i.viewUrl)}" style="display:inline-block;background:#1b2f4b;color:#fdfcfa;text-decoration:none;font-size:14px;font-weight:500;padding:11px 18px;border-radius:6px">View invoice</a></td></tr>
+<tr><td style="padding:20px 32px 32px"><a href="${esc(i.viewUrl)}" style="display:inline-block;background:#5b3df5;color:#fdfcfa;text-decoration:none;font-size:14px;font-weight:500;padding:11px 18px;border-radius:6px">View invoice</a></td></tr>
 </table>
 <p style="font-size:12px;color:#6f6d66;margin:16px 0 0">Sent by ${esc(i.senderName)} using PayFlow. Reply to this email to reach them directly.</p>
 </td></tr></table></body></html>`
