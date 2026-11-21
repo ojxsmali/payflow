@@ -14,6 +14,16 @@ PayFlow is an invoicing and payment-tracking app for freelancers and independent
 
 ## Screenshots
 
+**Public landing page** — what a signed-out visitor sees: an example invoice that walks the real lifecycle (Draft → Sent → Viewed → Partially paid → Paid) with totals from the app's own invoice maths, slow "payment flow" lines behind the hero, and a tabbed gallery of real screens.
+
+| | |
+|---|---|
+| ![PayFlow landing page: headline, call to action and an animated example invoice](docs/screenshots/landing-desktop.png) | ![Tabbed gallery of the real product screens](docs/screenshots/landing-product-desktop.png) |
+
+<p align="center"><img src="docs/screenshots/landing-mobile.png" width="250" alt="PayFlow landing page on a phone"></p>
+
+**Inside the app**
+
 | | |
 |---|---|
 | ![Invoice detail with balance, payment history and activity log](docs/screenshots/invoice-detail-desktop.png) | ![Invoice editor with line items and live totals](docs/screenshots/invoice-editor-desktop.png) |
@@ -182,7 +192,8 @@ Currencies are never mixed or converted: metrics are per currency (INR, USD, EUR
 - **Type:** IBM Plex Sans for the interface — engineered, neutral, and its figures are tabular by default, so columns of money align. IBM Plex Mono for invoice numbers and references. Newsreader (an optical-size serif) for page titles and the word "Invoice" on documents: the editorial note.
 - **Colour:** warm paper neutrals (`#F5F3EE` background, `#1A1A18` ink), one ink-navy accent (`#1B2F4B`) for actions, and muted signal colours — green for paid, amber for partial/due soon, brick red for overdue. A brass detail appears only in the logo.
 - **Layout:** numbers sit in ruled ledger strips rather than cards; tables are hairline-ruled; the dashboard leads with what needs action. Phones get a bottom tab bar with a central "new invoice" button, stacked line items and bottom-sheet dialogs.
-- **Motion:** 120–200 ms fades and rises, chart bars grow once; all disabled under `prefers-reduced-motion`.
+- **Motion:** 120–200 ms fades and rises inside the app, chart bars grow once. The landing page adds a word-by-word headline, an invoice that steps through its statuses (pauses on hover, tilts with the pointer, can be stepped by click), scroll reveals and slow payment-flow lines. All of it is disabled under `prefers-reduced-motion`.
+- **Landing page:** a deep ink-navy stage with brass light, so the public face is distinct from the paper-toned app it introduces. Full spec in [DESIGN.md](DESIGN.md).
 
 ## Local development
 
