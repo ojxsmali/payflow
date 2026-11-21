@@ -1,12 +1,38 @@
 # PayFlow
 
-**Create invoices. Track payments. Know what's outstanding.**
+[![CI](https://github.com/ojxsmali/payflow/actions/workflows/ci.yml/badge.svg)](https://github.com/ojxsmali/payflow/actions/workflows/ci.yml)
+[![Live](https://img.shields.io/badge/live-payflow--xi--one.vercel.app-1b2f4b)](https://payflow-xi-one.vercel.app)
+[![License: MIT](https://img.shields.io/badge/license-MIT-c9a86a)](LICENSE)
 
-**Live:** https://payflow-xi-one.vercel.app — sign up, then use *Load sample data* on the overview to explore with a fictional workspace.
+**Create invoices. Track payments. Know what's outstanding.**
 
 PayFlow is an invoicing and payment-tracking app for freelancers and independent professionals. It follows one lifecycle — *draft → send → get paid* — and every screen exists to move an invoice along it or to show where the money stands.
 
-> Screenshots: `docs/screenshots/` (add after deploying).
+**Live:** https://payflow-xi-one.vercel.app — sign up, then use *Load sample data* on the overview to explore a fictional workspace.
+
+![PayFlow overview: collected this month, outstanding, overdue and due-soon figures, a needs-attention list and a monthly revenue chart](docs/screenshots/overview-desktop.png)
+
+## Screenshots
+
+| | |
+|---|---|
+| ![Invoice detail with balance, payment history and activity log](docs/screenshots/invoice-detail-desktop.png) | ![Invoice editor with line items and live totals](docs/screenshots/invoice-editor-desktop.png) |
+| **Invoice** — the document, balance due, payments (voided ones kept) and a full activity log | **Editor** — line items, discount and tax, live totals the database recomputes on save |
+| ![Invoices list with status tabs, search and filters](docs/screenshots/invoices-desktop.png) | ![Analytics with collection rate, revenue by month and by client](docs/screenshots/analytics-desktop.png) |
+| **Invoices** — status tabs, search, client/date/amount filters, sortable columns | **Analytics** — every metric has a written definition on the page |
+| ![Client page with billed, paid and outstanding totals](docs/screenshots/client-desktop.png) | ![Public invoice page a client opens from the link](docs/screenshots/client-view-desktop.png) |
+| **Client** — billed / paid / outstanding, invoice and payment history | **Client view** — what the client sees at `/i/:token`, no account needed |
+
+<p align="center">
+  <img src="docs/screenshots/overview-mobile.png" width="250" alt="Overview on a phone">
+  &nbsp;
+  <img src="docs/screenshots/invoice-editor-mobile.png" width="250" alt="Invoice editor on a phone with stacked line items">
+  &nbsp;
+  <img src="docs/screenshots/invoice-detail-mobile.png" width="250" alt="Invoice detail on a phone">
+</p>
+<p align="center"><sub>Designed for phones too: bottom navigation, stacked line items, bottom-sheet dialogs.</sub></p>
+
+<sub>Screenshots use the built-in sample workspace; the businesses in it are fictional.</sub>
 
 ---
 
@@ -19,7 +45,7 @@ PayFlow is an invoicing and payment-tracking app for freelancers and independent
 - **Status workflow** — Draft → Sent → Viewed → Partially paid → Paid, with Overdue and Cancelled. Payment progress and lateness are *derived*, never typed in.
 - **Payments** — record full or partial payments (bank transfer, UPI, cash, card, PayPal, cheque, other) with reference and notes. Payments are immutable; mistakes are *voided with a reason* and stay in the history.
 - **PDF** — real, text-based A4 PDFs (selectable text, embedded fonts, ₹ glyphs) generated with `@react-pdf/renderer`. Rows never split across pages; tested at 1, 5 and 24 items with long descriptions.
-- **Sending** — email through Resend with the PDF attached, *only* when the deployment has it configured. Otherwise the app says so and offers copy-link, open-in-mail-app, or "I sent it myself".
+- **Sending** — email through Resend with the PDF attached, *only* when the deployment has it configured (the live demo uses Resend's test sender, so it can only deliver to the owner's address). Otherwise the app says so and offers copy-link, open-in-mail-app, or "I sent it myself".
 - **Client link** — `/i/:token` shows a sent invoice to the client without an account and records the first view.
 - **Dashboard** — collected this month (with a real month-over-month change), outstanding, overdue, due in 7 days — each opens the matching invoices — plus "Needs attention", a 6/12-month revenue chart, recent invoices and top clients.
 - **Analytics** — collection rate, average invoice, average days to pay, revenue by month and by client, invoices by status, and a written definition of every metric.
@@ -191,6 +217,8 @@ npm test          # money math, analytics definitions, PDF generation (1 / 5 / 2
 npm run test:db   # migrations on real Postgres (PGlite): totals, lifecycle, RLS isolation, public link
 npm run typecheck
 ```
+
+All of these run on every push in GitHub Actions (`.github/workflows/ci.yml`).
 
 Manually verified in the browser against a live Supabase project: sign-up and onboarding, validation messages, the full Draft → Sent → Viewed → Partially paid → Paid lifecycle, over-payment rejection, voiding a payment, PDF download, the public client link, search and filters, dashboard and analytics figures, and every page at 375 px with no horizontal scroll.
 
