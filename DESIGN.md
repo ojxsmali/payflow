@@ -1,35 +1,38 @@
-# PayFlow design system
+# PayFlow design system — violet and mint
 
-A ledger, not a dashboard toy: warm paper inside the app, a deep ink-navy stage with brass light on the public page. Numbers align, statuses are words as well as colours, and money is never decorative.
+A crisp, light app for the books, with a night stage around it: the sidebar, the landing page and the sign-in screens. Electric violet is for actions; signal mint is the "money arrived" colour.
 
 ## Colour (tokens in `src/index.css`)
 
 | Role | Token | Value |
 |---|---|---|
-| App background | `paper` | `#F5F3EE` |
-| Tables, documents, dialogs | `surface` | `#FDFCFA` |
-| Text | `ink` / `ink-2` / `muted` | `#1A1A18` / `#4A4944` / `#6F6D66` (5.0:1) |
-| Actions, links, focus | `accent` (ink navy) | `#1B2F4B` |
-| Brand detail | `brass` | `#C9A86A` |
-| Paid / partial / overdue | `success` / `warning` / `danger` | `#2B6A4A` / `#8A5A0B` / `#A3382B` |
-| Landing stage | `.pf-hero` | `#0F1C30` with brass and blue light |
+| App background | `paper` | `#F5F4FA` |
+| Tables, documents, dialogs | `surface` | `#FFFFFF` |
+| Text | `ink` / `ink-2` / `muted` | `#14121F` / `#46435A` / `#6C6880` (5.2:1) |
+| Actions, links, focus | `accent` (electric violet) | `#5B3DF5` (white text 6.4:1) |
+| Signal | `brass` token, now mint | `#2EE6A6` |
+| Night stage | `night` | `#0D0B1A` |
+| Paid / partial / overdue | `success` / `warning` / `danger` | `#0D8A5C` / `#A8620C` / `#CC3B2E` |
 
 ## Type
 
-IBM Plex Sans for the interface (tabular figures by default), IBM Plex Mono for invoice numbers and references, Newsreader for page titles, the word “Invoice” and landing headlines.
+**Sora** for display (page titles, headline figures, landing), **Figtree** for the interface, **Geist Mono** for invoice numbers and references. PDF invoices keep their embedded IBM Plex fonts.
 
-## Public landing page (`src/pages/Landing.tsx`)
+## Interaction (`motion` library + `src/lib/effects.ts`)
 
-1. Hero — word-by-word headline; an example invoice that walks Draft → Sent → Viewed → Partially paid → Paid on its own, pauses on hover, tilts with the pointer and can be stepped by click. Its totals come from the app’s own `calcInvoice()` (`src/lib/showcase.ts`, tested).
-2. Slow “payment flow” lines drawn behind the hero (SVG stroke animation).
-3. How it works, three steps.
-4. Real screens, tabbed with a cross-fade.
-5. Features, security band, closing call to action.
+| Pattern | Where |
+|---|---|
+| Draggable example invoice that springs back; collects payments on its own; mint burst when paid | landing hero |
+| Lifecycle stepper with a spring-sliding pill | landing hero |
+| Payment chips flying in as payments are recorded | landing hero |
+| Scroll-filled lifecycle line, scroll-linked product reveal | landing |
+| Magnetic CTAs, press squash + ripple on every button | everywhere |
+| Sliding active pill in the night sidebar and phone nav; spinning + button | app shell |
+| Spring-lift dashboard cards with cursor spotlight | dashboard |
+| Status pills with a live pulse for open invoices | everywhere |
 
-## Motion
-
-Word rise 900 ms, sections reveal once on scroll (14 px), status chip pops on change, progress bar eases 700 ms, chart bars grow once inside the app. Everything stops under `prefers-reduced-motion`.
+Everything respects `prefers-reduced-motion` via `<MotionConfig reducedMotion="user">` and CSS.
 
 ## Layout
 
-Checked at 1440, 1280, 768, 390, 375 and 320 px with no horizontal overflow. Phones get a bottom tab bar in the app and a single-column landing page.
+Checked at 1440, 1280, 768, 390, 375 and 320 px with no horizontal overflow. Phones get a floating bottom nav, stacked line items and bottom-sheet dialogs.
