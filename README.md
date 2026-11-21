@@ -2,6 +2,8 @@
 
 **Create invoices. Track payments. Know what's outstanding.**
 
+**Live:** https://payflow-xi-one.vercel.app — sign up, then use *Load sample data* on the overview to explore with a fictional workspace.
+
 PayFlow is an invoicing and payment-tracking app for freelancers and independent professionals. It follows one lifecycle — *draft → send → get paid* — and every screen exists to move an invoice along it or to show where the money stands.
 
 > Screenshots: `docs/screenshots/` (add after deploying).
@@ -180,7 +182,7 @@ In Supabase → Authentication → URL configuration, set the Site URL and redir
 
 ## Deployment (Vercel)
 
-Import the repo, set the variables above (not `SUPABASE_DB_URL`), deploy. `vercel.json` rewrites SPA routes and serves `api/send-invoice.ts` as a function.
+Import the repo, set the variables above (not `SUPABASE_DB_URL`), deploy. Then add the deployed URL to Supabase → Authentication → URL configuration (Site URL and redirect URLs). `vercel.json` rewrites SPA routes and serves `api/send-invoice.ts` as a function.
 
 ## Testing
 
