@@ -19,9 +19,9 @@ const SPRING = { type: 'spring', stiffness: 380, damping: 28 } as const
 const FRAME = 'mx-auto w-full max-w-[1360px] px-[clamp(16px,3vw,40px)]'
 
 const SHOTS = [
-  { id: 'overview', label: 'Overview', src: '/showcase/app-overview.jpg', alt: 'PayFlow overview: collected this month, outstanding, overdue and due soon, a needs-attention list, revenue by month and recent invoices.' },
-  { id: 'invoices', label: 'Invoices', src: '/showcase/app-invoices.jpg', alt: 'Invoices list with status tabs, search, client and date filters, balances and status pills.' },
-  { id: 'editor', label: 'Editor', src: '/showcase/app-editor.jpg', alt: 'New invoice editor with client, dates and due-date presets, line items, discount and tax, and a live summary.' },
+  { id: 'overview', label: 'Overview', src: '/showcase/app-overview-2400.webp', srcSet: '/showcase/app-overview-1280.webp 1280w, /showcase/app-overview-2400.webp 2400w', alt: 'PayFlow overview: collected this month, outstanding, overdue and due soon, a needs-attention list, revenue by month and recent invoices.' },
+  { id: 'invoices', label: 'Invoices', src: '/showcase/app-invoices-2400.webp', srcSet: '/showcase/app-invoices-1280.webp 1280w, /showcase/app-invoices-2400.webp 2400w', alt: 'Invoices list with status tabs, search, client and date filters, balances and status pills.' },
+  { id: 'editor', label: 'Editor', src: '/showcase/app-editor-2400.webp', srcSet: '/showcase/app-editor-1280.webp 1280w, /showcase/app-editor-2400.webp 2400w', alt: 'New invoice editor with client, dates and due-date presets, line items, discount and tax, and a live summary.' },
 ] as const
 
 const FEATURES = [
@@ -446,9 +446,11 @@ function Showcase() {
                 <motion.img
                   key={SHOTS[active].id}
                   src={SHOTS[active].src}
+                  srcSet={SHOTS[active].srcSet}
+                  sizes="(min-width: 1360px) 1280px, 100vw"
                   alt={SHOTS[active].alt}
-                  width={800}
-                  height={505}
+                  width={2400}
+                  height={1500}
                   decoding="async"
                   loading="lazy"
                   initial={{ opacity: 0, scale: 1.03, filter: 'blur(8px)' }}

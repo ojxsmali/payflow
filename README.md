@@ -41,7 +41,7 @@ PayFlow is an invoicing and payment-tracking app for freelancers and independent
   <img src="docs/screenshots/invoice-detail-mobile.png" width="250" alt="Invoice detail on a phone">
 </p>
 
-*All screenshots show the current "Ledger paper" design with a clearly labelled sample workspace. App screens were captured at 800 px wide (phones at 2×).*
+*All screenshots show the current "Ledger paper" design with a clearly labelled sample workspace. Desktop screens are 2400 × 1500, phones 3×.*
 <p align="center"><sub>Designed for phones too: bottom navigation, stacked line items, bottom-sheet dialogs.</sub></p>
 
 <sub>Screenshots use the built-in sample workspace; the businesses in it are fictional.</sub>
