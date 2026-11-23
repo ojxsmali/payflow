@@ -18,7 +18,7 @@ PayFlow is an invoicing and payment-tracking app for freelancers and independent
 
 | | |
 |---|---|
-| ![PayFlow landing page: headline, call to action and an animated example invoice](docs/screenshots/landing-desktop.png) | ![Tabbed gallery of the real product screens](docs/screenshots/landing-product-desktop.png) |
+| ![PayFlow landing page: oversized headline and an example invoice that collects payments until a PAID stamp lands](docs/screenshots/landing-desktop.png) | ![Tabbed gallery of the real product screens](docs/screenshots/landing-product-desktop.png) |
 
 <p align="center"><img src="docs/screenshots/landing-mobile.png" width="250" alt="PayFlow landing page on a phone"></p>
 
@@ -41,7 +41,7 @@ PayFlow is an invoicing and payment-tracking app for freelancers and independent
   <img src="docs/screenshots/invoice-detail-mobile.png" width="250" alt="Invoice detail on a phone">
 </p>
 
-*Overview, Invoices and Editor show the current violet design. The invoice, client, analytics and phone screenshots were taken before the November 2026 restyle, so they still show the earlier navy colour scheme; the layouts and features are unchanged.*
+*The landing screenshots show the current "Ledger paper" design. The in-app screenshots were taken before the November 2026 redesign, so their colours and type differ; the layouts and features are unchanged.*
 <p align="center"><sub>Designed for phones too: bottom navigation, stacked line items, bottom-sheet dialogs.</sub></p>
 
 <sub>Screenshots use the built-in sample workspace; the businesses in it are fictional.</sub>
