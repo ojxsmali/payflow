@@ -1,27 +1,29 @@
 @import 'tailwindcss';
 
-/* ── Design tokens ─────────────────────────────────────────────────────────
-   Warm paper neutrals, one ink-navy accent, and three muted signal colours.
-   Every colour used in the UI comes from here. */
+/* ── Design tokens — "Ledger paper" ─────────────────────────────────────────
+   The invoice as a printed document: near-white paper, near-black ink,
+   hairline rules instead of shadows, and ONE violet "stamp ink" accent for
+   actions, focus and the moment an invoice is paid. Every colour lives here. */
 @theme {
-  --font-sans: 'Figtree Variable', ui-sans-serif, system-ui, sans-serif;
+  --font-sans: 'Geist Variable', ui-sans-serif, system-ui, sans-serif;
   --font-mono: 'Geist Mono Variable', ui-monospace, monospace;
-  --font-display: 'Sora Variable', 'Figtree Variable', ui-sans-serif, sans-serif;
+  --font-display: 'Geist Variable', ui-sans-serif, system-ui, sans-serif;
+  --font-serif: 'Newsreader Variable', 'Iowan Old Style', Georgia, serif;
 
-  --color-paper: #f5f4fa; /* app background: cool lavender-grey */
+  --color-paper: #f5f5f5; /* app background */
   --color-surface: #ffffff; /* raised: tables, document, dialogs */
-  --color-sunken: #edebf5; /* inputs on hover, table header, skeletons */
-  --color-ink: #14121f; /* primary text */
-  --color-ink-2: #46435a; /* secondary text */
-  --color-muted: #6c6880; /* labels, meta (AA on paper: 5.2:1) */
-  --color-line: #e4e1ee; /* hairlines */
-  --color-line-strong: #cfcbdd; /* input borders */
+  --color-sunken: #ebebeb; /* inputs on hover, table header, skeletons */
+  --color-ink: #0d0d0d; /* primary text — 18.9:1 on paper */
+  --color-ink-2: #3d3d3d; /* secondary text — 10.2:1 */
+  --color-muted: #666666; /* labels, meta — 5.3:1 on paper */
+  --color-line: #e0e0e0; /* hairlines */
+  --color-line-strong: #c4c4c4; /* input borders */
 
-  --color-accent: #5b3df5; /* electric violet: primary actions, links, focus (white text 6.4:1) */
+  --color-accent: #5b3df5; /* violet stamp ink: actions, links, focus (white text 6.4:1) */
   --color-accent-hover: #4a2ee0;
   --color-accent-soft: #ece8ff;
-  --color-brass: #2ee6a6; /* signal mint: brand detail, "money arrived" moments */
-  --color-night: #0d0b1a; /* landing stage */
+  --color-brass: #a99bff; /* the accent, lifted for use on black (7.6:1 on night) */
+  --color-night: #0d0d0d; /* the inverted stage: sidebar, security band */
 
   --color-success: #0d8a5c;
   --color-success-soft: #dcf5ea;
@@ -30,15 +32,16 @@
   --color-danger: #cc3b2e;
   --color-danger-soft: #fce6e3;
 
-  --radius-sm: 8px;
-  --radius-md: 12px;
-  --radius-lg: 18px;
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
 
-  --shadow-pop: 0 1px 2px rgb(20 18 31 / 0.06), 0 16px 40px -12px rgb(40 24 120 / 0.22);
-  --shadow-doc: 0 1px 2px rgb(20 18 31 / 0.05), 0 8px 30px -10px rgb(40 24 120 / 0.16);
+  --shadow-pop: 0 0 0 1px rgb(13 13 13 / 0.06), 0 16px 40px -16px rgb(13 13 13 / 0.22);
+  --shadow-doc: 0 0 0 1px rgb(13 13 13 / 0.05), 0 18px 40px -24px rgb(13 13 13 / 0.25);
 
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
   --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-reveal: cubic-bezier(0.16, 1, 0.3, 1);
   --duration-fast: 140ms;
   --duration-base: 220ms;
   /* type scale (1.2 minor third from 14px) */
@@ -78,7 +81,8 @@
     border-radius: 2px;
   }
   ::selection {
-    background: var(--color-accent-soft);
+    background: var(--color-accent);
+    color: #fff;
   }
   input[type='number']::-webkit-inner-spin-button {
     display: none;
@@ -91,8 +95,31 @@
 @layer components {
   .display {
     font-family: var(--font-display);
-    letter-spacing: -0.035em;
+    letter-spacing: -0.045em;
     font-weight: 600;
+    line-height: 1;
+  }
+  /* Editorial roles */
+  .pf-display {
+    font-family: var(--font-display);
+    font-weight: 600;
+    letter-spacing: -0.058em;
+    line-height: 0.9;
+  }
+  .pf-serif {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-weight: 400;
+    letter-spacing: -0.025em;
+  }
+  .pf-label {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    line-height: 1rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-muted);
   }
   .label {
     font-size: var(--text-xs);
@@ -180,31 +207,19 @@
   animation: pf-ping 2s cubic-bezier(0.22, 1, 0.36, 1) infinite;
 }
 @keyframes pf-ping { 0% { transform: scale(0.6); opacity: 0.8; } 100% { transform: scale(2.2); opacity: 0; } }
-.pf-spot { position: relative; }
-.pf-spot::before {
-  content: ''; position: absolute; inset: -1px; border-radius: inherit; pointer-events: none; opacity: 0; z-index: 0;
-  transition: opacity 300ms ease;
-  background: radial-gradient(380px circle at var(--mx, 50%) var(--my, 0%), rgb(91 61 245 / 0.10), transparent 45%);
-}
-.pf-spot:hover::before { opacity: 1; }
+.pf-spot { position: relative; transition: border-color 220ms ease; }
+.pf-spot:hover { border-color: var(--color-line-strong); }
 .pf-page { animation: pf-page 480ms cubic-bezier(0.22, 1, 0.36, 1) both; }
 @keyframes pf-page { from { opacity: 0; transform: translateY(12px); filter: blur(4px); } to { opacity: 1; transform: none; filter: none; } }
-.pf-marquee { display: flex; width: max-content; animation: pf-marquee 34s linear infinite; }
-.pf-marquee-wrap:hover .pf-marquee { animation-play-state: paused; }
-@keyframes pf-marquee { to { transform: translateX(-50%); } }
-.pf-grid {
-  background-image: linear-gradient(to right, rgb(255 255 255 / 0.05) 1px, transparent 1px), linear-gradient(to bottom, rgb(255 255 255 / 0.05) 1px, transparent 1px);
-  background-size: 56px 56px;
-  -webkit-mask-image: radial-gradient(ellipse 70% 70% at 50% 20%, #000 20%, transparent 75%);
-  mask-image: radial-gradient(ellipse 70% 70% at 50% 20%, #000 20%, transparent 75%);
+/* Landing: the stamp that lands when the example invoice is paid */
+.pf-stamp {
+  border: 3px solid currentColor;
+  border-radius: 6px;
+  outline: 1px solid currentColor;
+  outline-offset: 3px;
+  mix-blend-mode: multiply;
 }
-.pf-shine {
-  color: var(--color-brass);
-  background: linear-gradient(currentColor, currentColor) no-repeat 0 92% / 0% 0.06em;
-  animation: pf-underline 900ms cubic-bezier(0.22, 1, 0.36, 1) 1.1s forwards;
-}
-@keyframes pf-underline { to { background-size: 100% 0.06em; } }
 @media (prefers-reduced-motion: reduce) {
   .pf-press:active:not(:disabled) { transform: none; }
-  .pf-pulse::after, .pf-marquee, .pf-shine { animation: none; }
+  .pf-pulse::after { animation: none; }
 }

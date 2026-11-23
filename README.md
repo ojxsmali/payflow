@@ -1,7 +1,7 @@
 # PayFlow
 
 [![CI](https://github.com/ojxsmali/payflow/actions/workflows/ci.yml/badge.svg)](https://github.com/ojxsmali/payflow/actions/workflows/ci.yml)
-[![Live](https://img.shields.io/badge/live-payflow--xi--one.vercel.app-1b2f4b)](https://payflow-xi-one.vercel.app)
+[![Live](https://img.shields.io/badge/live-payflow--xi--one.vercel.app-5b3df5)](https://payflow-xi-one.vercel.app)
 [![License: MIT](https://img.shields.io/badge/license-MIT-c9a86a)](LICENSE)
 
 **Create invoices. Track payments. Know what's outstanding.**
@@ -191,11 +191,10 @@ Currencies are never mixed or converted: metrics are per currency (INR, USD, EUR
 
 ## Design
 
-- **Type:** Figtree for the interface, Sora for page titles, headline figures and the landing page, Geist Mono for invoice numbers and references. PDF invoices keep embedded IBM Plex fonts.
-- **Colour:** a crisp light app (`#F5F4FA` background, `#14121F` ink) with electric violet (`#5B3DF5`) for actions and signal mint (`#2EE6A6`) for money arriving; green for paid, amber for partial, red for overdue. The sidebar, landing page and sign-in screens sit on a night stage (`#0D0B1A`).
-- **Layout:** numbers sit in ruled ledger strips rather than cards; tables are hairline-ruled; the dashboard leads with what needs action. Phones get a bottom tab bar with a central "new invoice" button, stacked line items and bottom-sheet dialogs.
-- **Motion:** 120–200 ms fades and rises inside the app, chart bars grow once. The landing page adds a word-by-word headline, an invoice that steps through its statuses (pauses on hover, tilts with the pointer, can be stepped by click), scroll reveals and slow payment-flow lines. All of it is disabled under `prefers-reduced-motion`.
-- **Landing page:** a centred night stage with violet light: a word-by-word spring headline and a draggable example invoice that collects payments, bursts mint when paid and springs back when you let go. Full spec in [DESIGN.md](DESIGN.md).
+- **Concept — "Ledger paper":** the invoice as a printed document. Near-white paper (`#F5F5F5`), near-black ink (`#0D0D0D`), hairline rules instead of shadows, and one violet "stamp ink" accent (`#5B3DF5`) for actions, focus and the moment an invoice is paid. Green, amber and red stay reserved for paid, partial and overdue.
+- **Type:** Geist for headlines, interface and figures; Newsreader italic for one editorial phrase per headline; Geist Mono for section markers, invoice numbers and references. PDF invoices keep embedded IBM Plex fonts.
+- **Layout:** oversized page titles over a hairline; numbers sit in ruled ledger strips rather than cards; the dashboard leads with what needs action. The sidebar and the landing page's security band are the only black surfaces. Phones get a bottom tab bar with a central "new invoice" button, stacked line items and bottom-sheet dialogs.
+- **Landing page:** an editorial page with numbered sections. Its signature visual is an example invoice on paper that collects its payments on its own (pauses on hover, steps by click, drags and springs back); when the balance reaches zero a violet PAID stamp lands on it. All motion is disabled under `prefers-reduced-motion`. Full spec in [DESIGN.md](DESIGN.md).
 
 ## Local development
 

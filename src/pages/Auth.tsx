@@ -10,27 +10,24 @@ function AuthLayout({ title, subtitle, children, footer }: { title: string; subt
   return (
     <div className="grid min-h-dvh lg:grid-cols-[1fr_minmax(0,560px)]">
       <aside className="relative hidden flex-col justify-between overflow-hidden bg-night px-12 py-10 text-white lg:flex">
-        <div className="pf-grid pointer-events-none absolute inset-0" aria-hidden />
-        <div className="pointer-events-none absolute -left-40 -top-40 size-[520px] rounded-full bg-[radial-gradient(circle,rgb(91_61_245/0.5),transparent_60%)] blur-2xl" aria-hidden />
-        <div className="pointer-events-none absolute -bottom-40 -right-20 size-[420px] rounded-full bg-[radial-gradient(circle,rgb(46_230_166/0.18),transparent_65%)] blur-2xl" aria-hidden />
         <Link to="/" aria-label="PayFlow home" className="relative flex w-max items-center gap-2.5">
           <LogoMark className="size-8" />
-          <span className="font-display text-[17px] font-semibold tracking-[-0.03em]">PayFlow</span>
+          <span className="text-[17px] font-semibold tracking-[-0.035em]">PayFlow</span>
         </Link>
         <div className="relative max-w-md">
-          <p className="font-display text-4xl font-semibold leading-[1.05] tracking-[-0.045em]">Create invoices. Track payments. Know what’s <span className="pf-shine">outstanding</span>.</p>
-          <dl className="mt-10 grid grid-cols-3 gap-6 border-t border-white/10 pt-6 text-sm">
-            <div><dt className="text-xs font-semibold uppercase tracking-[0.12em] text-brass">Draft</dt><dd className="mt-1.5 text-[#bdb8d6]">Build the invoice, preview the PDF.</dd></div>
-            <div><dt className="text-xs font-semibold uppercase tracking-[0.12em] text-brass">Send</dt><dd className="mt-1.5 text-[#bdb8d6]">Email it or share a private link.</dd></div>
-            <div><dt className="text-xs font-semibold uppercase tracking-[0.12em] text-brass">Get paid</dt><dd className="mt-1.5 text-[#bdb8d6]">Record payments, see what’s still due.</dd></div>
+          <p className="pf-display text-6xl">Create invoices. Track payments. <span className="pf-serif text-brass">Know what’s outstanding.</span></p>
+          <dl className="mt-10 grid grid-cols-3 gap-6 border-t border-white/20 pt-6 text-sm">
+            <div><dt className="pf-label !text-brass">Draft</dt><dd className="mt-1.5 text-white/70">Build the invoice, preview the PDF.</dd></div>
+            <div><dt className="pf-label !text-brass">Send</dt><dd className="mt-1.5 text-white/70">Email it or share a private link.</dd></div>
+            <div><dt className="pf-label !text-brass">Get paid</dt><dd className="mt-1.5 text-white/70">Record payments, see what’s still due.</dd></div>
           </dl>
         </div>
-        <p className="relative text-xs text-[#8d88a8]">For freelancers and independent professionals.</p>
+        <p className="pf-label relative !text-white/50">For freelancers and independent professionals.</p>
       </aside>
       <main className="flex flex-col px-5 py-8 sm:px-10">
         <div className="lg:hidden"><Link to="/" aria-label="PayFlow home"><Logo /></Link></div>
         <div className="my-auto w-full max-w-sm self-center py-10">
-          <h1 className="display text-2xl">{title}</h1>
+          <h1 className="pf-display text-4xl">{title}</h1>
           {subtitle && <p className="mt-2 text-sm text-muted">{subtitle}</p>}
           <div className="mt-8">{children}</div>
           {footer && <div className="mt-8 border-t border-line pt-5 text-sm text-muted">{footer}</div>}

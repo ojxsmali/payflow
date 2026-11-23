@@ -119,21 +119,20 @@ function Figure({ label, value, sub, to, tone, hero }: { label: string; value?: 
         className={cx(
           'pf-spot group flex h-full flex-col rounded-lg border p-5 transition-shadow',
           hero
-            ? 'overflow-hidden border-transparent bg-night text-white shadow-[0_24px_50px_-20px_rgb(91_61_245/0.6)]'
-            : 'border-line bg-surface hover:shadow-[var(--shadow-pop)]',
+            ? 'overflow-hidden border-transparent bg-night text-white'
+            : 'border-line bg-surface',
         )}
       >
-        {hero && <span className="pointer-events-none absolute -right-10 -top-14 size-40 rounded-full bg-accent/50 blur-3xl" aria-hidden />}
-        <p className={cx('relative flex items-center justify-between text-xs font-medium', hero ? 'text-[#bdb8d6]' : 'text-muted')}>
+        <p className={cx('relative flex items-center justify-between text-xs font-medium', hero ? 'text-white/65' : 'text-muted')}>
           {label}
           <ArrowRight className="size-3.5 -translate-x-1 opacity-0 transition-all duration-300 group-hover:translate-x-0 group-hover:opacity-100" aria-hidden />
         </p>
         {value ? (
-          <p className={cx('num relative mt-4 font-display text-2xl font-semibold tracking-[-0.04em] sm:text-[1.9rem]', hero ? 'text-white' : tone === 'danger' ? 'text-danger' : 'text-ink')}>{value}</p>
+          <p className={cx('num relative mt-4 text-2xl font-semibold tracking-[-0.045em] sm:text-[2.1rem]', hero ? 'text-white' : tone === 'danger' ? 'text-danger' : 'text-ink')}>{value}</p>
         ) : (
           <Skeleton className="mt-4 h-8 w-28" />
         )}
-        <p className={cx('relative mt-1 min-h-5 text-sm', hero ? 'text-[#a9a4c4] [&_.text-success]:text-brass [&_.text-danger]:text-[#ff8f80]' : 'text-muted')}>{sub}</p>
+        <p className={cx('relative mt-1 min-h-5 text-sm', hero ? 'text-white/60 [&_.text-success]:text-brass [&_.text-danger]:text-[#ff8f80]' : 'text-muted')}>{sub}</p>
       </Link>
     </motion.div>
   )

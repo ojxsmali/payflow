@@ -169,10 +169,10 @@ export function SampleTag() {
 // ── Layout helpers ──────────────────────────────────────────────────────────
 export function PageHeader({ title, eyebrow, meta, actions }: { title: ReactNode; eyebrow?: ReactNode; meta?: ReactNode; actions?: ReactNode }) {
   return (
-    <header className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+    <header className="mb-10 flex flex-col gap-4 border-b border-line pb-6 sm:flex-row sm:items-end sm:justify-between">
       <div className="min-w-0">
-        {eyebrow && <div className="eyebrow mb-2">{eyebrow}</div>}
-        <h1 className="display text-[2rem] leading-[1.05] text-ink break-words sm:text-[2.6rem]">{title}</h1>
+        {eyebrow && <div className="pf-label mb-3">{eyebrow}</div>}
+        <h1 className="pf-display text-[2.5rem] text-ink break-words sm:text-[3.5rem]">{title}</h1>
         {meta && <div className="mt-2 text-sm text-muted">{meta}</div>}
       </div>
       {actions && <div className="flex flex-wrap items-center gap-2 no-print">{actions}</div>}
