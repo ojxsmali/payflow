@@ -250,7 +250,7 @@ function InvoiceStage() {
                   animate={{ opacity: 0.92, scale: 1, rotate: -11 }}
                   exit={{ opacity: 0, transition: { duration: 0.2 } }}
                   transition={{ type: 'spring', stiffness: 520, damping: 22, mass: 0.8 }}
-                  className="pf-stamp pointer-events-none absolute bottom-[64px] left-6 z-10 scale-75 sm:left-[30%] sm:scale-100 px-4 py-2 text-center text-accent sm:left-[30%]"
+                  className="pf-stamp pointer-events-none absolute bottom-[64px] left-5 z-10 scale-75 px-4 py-2 text-center text-accent sm:left-[9%] sm:scale-90 lg:scale-100"
                   aria-hidden
                 >
                   <span className="block font-mono text-2xl font-bold tracking-[0.12em] sm:text-3xl">PAID</span>
