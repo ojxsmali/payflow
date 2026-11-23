@@ -30,7 +30,7 @@ PayFlow is an invoicing and payment-tracking app for freelancers and independent
 | **Invoice** — the document, balance due, payments (voided ones kept) and a full activity log | **Editor** — line items, discount and tax, live totals the database recomputes on save |
 | ![Invoices list with status tabs, search and filters](docs/screenshots/invoices-desktop.png) | ![Analytics with collection rate, revenue by month and by client](docs/screenshots/analytics-desktop.png) |
 | **Invoices** — status tabs, search, client/date/amount filters, sortable columns | **Analytics** — every metric has a written definition on the page |
-| ![Client page with billed, paid and outstanding totals](docs/screenshots/client-desktop.png) | ![Public invoice page a client opens from the link](docs/screenshots/client-view-desktop.png) |
+| ![Client page with billed, paid and outstanding totals](docs/screenshots/client-desktop.png) | ![Client-view preview: the invoice exactly as the client sees it](docs/screenshots/client-view-desktop.png) |
 | **Client** — billed / paid / outstanding, invoice and payment history | **Client view** — what the client sees at `/i/:token`, no account needed |
 
 <p align="center">
@@ -41,7 +41,7 @@ PayFlow is an invoicing and payment-tracking app for freelancers and independent
   <img src="docs/screenshots/invoice-detail-mobile.png" width="250" alt="Invoice detail on a phone">
 </p>
 
-*The landing screenshots show the current "Ledger paper" design. The in-app screenshots were taken before the November 2026 redesign, so their colours and type differ; the layouts and features are unchanged.*
+*All screenshots show the current "Ledger paper" design with a clearly labelled sample workspace. App screens were captured at 800 px wide (phones at 2×).*
 <p align="center"><sub>Designed for phones too: bottom navigation, stacked line items, bottom-sheet dialogs.</sub></p>
 
 <sub>Screenshots use the built-in sample workspace; the businesses in it are fictional.</sub>

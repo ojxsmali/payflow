@@ -151,7 +151,7 @@ const toneDot = { muted: 'bg-muted/60', accent: 'bg-accent', success: 'bg-succes
 export function StatusBadge({ status, className }: { status: InvoiceStatus; className?: string }) {
   const m = STATUS_META[status]
   return (
-    <span className={cx('inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-semibold whitespace-nowrap', toneText[m.tone], toneBg[m.tone], className)} title={m.help}>
+    <span className={cx('inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-semibold tracking-normal whitespace-nowrap', toneText[m.tone], toneBg[m.tone], className)} title={m.help}>
       <span aria-hidden className={cx('pf-dot relative size-1.5 rounded-full', toneDot[m.tone], (status === 'sent' || status === 'viewed' || status === 'overdue') && 'pf-pulse')} />
       <span className={status === 'cancelled' ? 'line-through decoration-muted/50' : undefined}>{m.label}</span>
     </span>

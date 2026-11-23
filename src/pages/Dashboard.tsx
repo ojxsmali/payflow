@@ -128,7 +128,7 @@ function Figure({ label, value, sub, to, tone, hero }: { label: string; value?: 
           <ArrowRight className="size-3.5 -translate-x-1 opacity-0 transition-all duration-300 group-hover:translate-x-0 group-hover:opacity-100" aria-hidden />
         </p>
         {value ? (
-          <p className={cx('num relative mt-4 text-2xl font-semibold tracking-[-0.045em] sm:text-[2.1rem]', hero ? 'text-white' : tone === 'danger' ? 'text-danger' : 'text-ink')}>{value}</p>
+          <p className={cx('num relative mt-4 text-xl font-semibold tracking-[-0.045em] sm:text-[2.1rem]', hero ? 'text-white' : tone === 'danger' ? 'text-danger' : 'text-ink')}>{value}</p>
         ) : (
           <Skeleton className="mt-4 h-8 w-28" />
         )}

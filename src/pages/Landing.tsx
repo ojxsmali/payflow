@@ -447,8 +447,8 @@ function Showcase() {
                   key={SHOTS[active].id}
                   src={SHOTS[active].src}
                   alt={SHOTS[active].alt}
-                  width={1600}
-                  height={1000}
+                  width={800}
+                  height={505}
                   decoding="async"
                   loading="lazy"
                   initial={{ opacity: 0, scale: 1.03, filter: 'blur(8px)' }}

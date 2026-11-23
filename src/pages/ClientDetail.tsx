@@ -82,7 +82,7 @@ export function ClientDetailPage() {
     <>
       <PageHeader
         eyebrow={<Link to="/clients" className="hover:text-ink">Clients</Link>}
-        title={<span className="flex flex-wrap items-center gap-3">{client.name}{client.is_sample && <SampleTag />}{archived && <span className="rounded-sm border border-line-strong px-1.5 py-px font-sans text-xs text-muted">Archived</span>}</span>}
+        title={<span className="flex flex-wrap items-center gap-3">{client.name}{client.is_sample && <SampleTag />}{archived && <span className="rounded-sm border border-line-strong px-1.5 py-px font-sans text-xs tracking-normal text-muted">Archived</span>}</span>}
         meta={
           <span className="flex flex-wrap gap-x-4 gap-y-1">
             {client.company_name && client.company_name !== client.name && <span>{client.company_name}</span>}
