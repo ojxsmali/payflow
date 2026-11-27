@@ -27,7 +27,7 @@ export function SettingsPage() {
       <div className="grid gap-10 lg:grid-cols-[180px_minmax(0,1fr)]">
         <nav aria-label="Settings sections" className="hidden lg:block">
           <ul className="sticky top-10 space-y-0.5 text-sm">
-            {SECTIONS.map((s) => <li key={s.id}><a href={`#${s.id}`} className="block rounded px-2 py-1.5 text-ink-2 hover:bg-sunken hover:text-ink">{s.label}</a></li>)}
+            {SECTIONS.map((s) => <li key={s.id}><a href={`#${s.id}`} className="pf-press block rounded-full px-3 py-1.5 font-semibold text-ink-2 transition-colors hover:bg-lime hover:text-ink">{s.label}</a></li>)}
           </ul>
         </nav>
         <div className="flex max-w-2xl flex-col gap-14">

@@ -286,7 +286,7 @@ export function InvoiceEditorPage() {
                   key={d}
                   type="button"
                   onClick={() => patch({ dueDate: addDays(form.issueDate || today, d) })}
-                  className={cx('rounded border px-2 py-0.5 transition-colors', form.dueDate === addDays(form.issueDate || today, d) ? 'border-ink bg-ink text-surface' : 'border-line-strong hover:border-ink-2/50 hover:text-ink')}
+                  className={cx('pf-press rounded-full border-2 px-2.5 py-0.5 font-semibold transition-colors', form.dueDate === addDays(form.issueDate || today, d) ? 'border-ink bg-lime text-ink' : 'border-line hover:border-ink hover:text-ink')}
                 >
                   {d === 0 ? 'On receipt' : `${d} days`}
                 </button>
@@ -345,7 +345,7 @@ export function InvoiceEditorPage() {
 
         {/* Summary: sticky beside the form on desktop, a bottom bar on phones */}
         <aside className="lg:sticky lg:top-10 lg:self-start" aria-label="Invoice summary">
-          <div className="hidden rounded-lg border border-line bg-surface p-5 lg:block">
+          <div className="pf-sheet hidden rounded-[14px] p-5 lg:block">
             <p className="eyebrow mb-4">Summary</p>
             <Totals calc={parsed.calc} m={m} discountLabel={form.discountType === 'percent' ? `Discount (${formatRate(parsed.discountValue)})` : 'Discount'} taxLabel={`${form.taxLabel || 'Tax'} (${formatRate(parsed.taxRateBp)})`} />
             <div className="mt-6 flex flex-col gap-2">
@@ -408,8 +408,8 @@ function Totals({ calc, m, discountLabel, taxLabel }: { calc: ReturnType<typeof 
 function EditorSection({ n, title, children }: { n: number; title: string; children: React.ReactNode }) {
   return (
     <section aria-labelledby={`sec-${n}`}>
-      <h2 id={`sec-${n}`} className="mb-4 flex items-baseline gap-3 border-b border-line pb-2 text-sm font-semibold">
-        <span className="font-mono text-xs font-normal text-muted">0{n}</span>
+      <h2 id={`sec-${n}`} className="mb-4 flex items-center gap-3 border-b-2 border-ink pb-2 text-md font-extrabold tracking-[-0.02em] [font-stretch:115%]">
+        <span className="grid size-6 place-items-center rounded-full bg-lime font-mono text-2xs font-medium text-ink">0{n}</span>
         {title}
       </h2>
       {children}

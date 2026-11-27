@@ -137,9 +137,9 @@ export function InvoiceDetailPage() {
 
         <aside className="order-1 flex flex-col gap-8 lg:order-2" aria-label="Invoice status">
           {/* Balance */}
-          <section className="rounded-lg border border-line bg-surface p-5">
+          <section className="pf-sheet rounded-[14px] p-5">
             <p className="label">{inv.status === 'paid' ? 'Paid in full' : isCancelled ? 'Cancelled' : isDraft ? 'Total' : 'Balance due'}</p>
-            <p className={cx('num mt-1 text-xl font-semibold', inv.status === 'overdue' && 'text-danger')}>{m(isDraft || inv.status === 'paid' || isCancelled ? inv.total : inv.balance_due)}</p>
+            <p className={cx('num pf-wordmark mt-2 text-[1.9rem] leading-none', inv.status === 'overdue' && 'text-danger', inv.status === 'paid' && 'text-success')}>{m(isDraft || inv.status === 'paid' || isCancelled ? inv.total : inv.balance_due)}</p>
             {canPay && <p className={cx('mt-1 text-sm', inv.status === 'overdue' ? 'text-danger' : 'text-muted')}>{dueLabel(inv.days_until_due)} · {formatDate(inv.due_date)}</p>}
             {isDraft && <p className="mt-1 text-sm text-muted">{STATUS_META.draft.help}</p>}
             {inv.total > 0 && !isDraft && !isCancelled && (

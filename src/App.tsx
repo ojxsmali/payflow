@@ -7,7 +7,10 @@ import { AppShell } from './components/layout/AppShell'
 import { isConfigured } from './lib/supabase'
 import { LoginPage, SignupPage, ResetPasswordPage, UpdatePasswordPage, SetupNeeded } from './pages/Auth'
 import { DashboardPage } from './pages/Dashboard'
-import { Skeleton } from './components/ui'
+import { Button, Skeleton } from './components/ui'
+import { Press3D } from './components/three/Scene3D'
+import { FlatPress } from './components/brand/FlatPress'
+import { LogoMark } from './components/layout/Logo'
 
 // Route-level code splitting: the editor, analytics and the public page load on demand.
 const InvoicesPage = lazy(() => import('./pages/Invoices').then((m) => ({ default: m.InvoicesPage })))
@@ -20,6 +23,7 @@ const AnalyticsPage = lazy(() => import('./pages/Analytics').then((m) => ({ defa
 const SettingsPage = lazy(() => import('./pages/Settings').then((m) => ({ default: m.SettingsPage })))
 const OnboardingPage = lazy(() => import('./pages/Onboarding').then((m) => ({ default: m.OnboardingPage })))
 const LandingPage = lazy(() => import('./pages/Landing').then((m) => ({ default: m.LandingPage })))
+const BrandPage = lazy(() => import('./pages/Brand').then((m) => ({ default: m.BrandPage })))
 const PublicInvoicePage = lazy(() => import('./pages/PublicInvoice').then((m) => ({ default: m.PublicInvoicePage })))
 
 function PageFallback() {
@@ -33,7 +37,11 @@ function PageFallback() {
 }
 
 function FullFallback() {
-  return <div role="status" aria-label="Loading" className="min-h-dvh" />
+  return (
+    <div role="status" aria-label="Loading" className="grid min-h-dvh place-items-center">
+      <LogoMark variant="stamp" className="pf-thump size-12" />
+    </div>
+  )
 }
 
 function RequireAuth({ children }: { children: ReactNode }) {
@@ -75,6 +83,7 @@ export function App() {
               <Route path="/signup" element={<PublicOnly><SignupPage /></PublicOnly>} />
               <Route path="/reset-password" element={<PublicOnly><ResetPasswordPage /></PublicOnly>} />
               <Route path="/update-password" element={<UpdatePasswordPage />} />
+              <Route path="/brand" element={<BrandPage />} />
               <Route path="/i/:token" element={<Suspense fallback={<div className="mx-auto max-w-3xl px-4 py-14"><PageFallback /></div>}><PublicInvoicePage /></Suspense>} />
               <Route path="/welcome" element={<RequireAuth><OnboardingPage /></RequireAuth>} />
               <Route element={<RequireAuth><AppShell /></RequireAuth>}>
@@ -101,10 +110,19 @@ export function App() {
 
 function NotFound() {
   return (
-    <div className="py-20">
-      <p className="eyebrow">404</p>
-      <h1 className="display mt-2 text-2xl">This page doesn’t exist.</h1>
-      <a href="/dashboard" className="link mt-4 inline-block text-sm">Back to overview</a>
+    <div className="grid items-center gap-10 py-10 lg:grid-cols-2">
+      <div>
+        <p className="pf-label">Error 404</p>
+        <h1 className="pf-display mt-4 text-[clamp(2.4rem,6vw,4.5rem)]">
+          This page was <span className="pf-hl">never invoiced.</span>
+        </h1>
+        <p className="mt-4 max-w-sm text-base text-ink-2">The link may be old or mistyped. Nothing is lost — your invoices are where you left them.</p>
+        <div className="mt-8 flex flex-wrap gap-2">
+          <Button variant="primary" to="/dashboard">Back to overview</Button>
+          <Button to="/invoices">Open invoices</Button>
+        </div>
+      </div>
+      <Press3D mode="single" className="h-[320px] overflow-hidden rounded-[22px] bg-night sm:h-[420px]" fallback={<FlatPress single />} />
     </div>
   )
 }

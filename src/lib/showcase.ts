@@ -34,3 +34,27 @@ export const LIFECYCLE: LifecycleStep[] = [
   { status: 'partially_paid', event: `Payment recorded · ${EXAMPLE_PAYMENTS[0].method}`, when: EXAMPLE_PAYMENTS[0].when, paid: EXAMPLE_PAYMENTS[0].amount },
   { status: 'paid', event: `Payment recorded · ${EXAMPLE_PAYMENTS[1].method}`, when: EXAMPLE_PAYMENTS[1].when, paid: EXAMPLE_TOTALS.total },
 ]
+
+/**
+ * The queue of example invoices on the landing page's 3D press. Fictional clients;
+ * every total comes from calcInvoice(), the same maths the editor and database use.
+ */
+const q = (no: string, client: string, status: InvoiceStatus, items: { description: string; quantityMilli: number; unitPrice: number }[], taxRateBp = 1800) => ({
+  no,
+  client,
+  status,
+  items,
+  total: calcInvoice({ items, discountType: 'percent', discountValue: 0, taxRateBp }).total,
+})
+
+export const PRESS_QUEUE = [
+  { no: 'INV-0042', client: 'Meridian Design Co.', status: 'viewed' as InvoiceStatus, items: EXAMPLE_ITEMS, total: EXAMPLE_TOTALS.total },
+  q('INV-0043', 'Orbit Systems', 'sent', [{ description: 'Landing page build', quantityMilli: 1000, unitPrice: 3_200_000 }, { description: 'CMS setup', quantityMilli: 1000, unitPrice: 900_000 }]),
+  q('INV-0044', 'Acme Studio', 'overdue', [{ description: 'Illustration set — 12', quantityMilli: 12000, unitPrice: 250_000 }]),
+  q('INV-0045', 'Northwind Foods', 'partially_paid', [{ description: 'Packaging design', quantityMilli: 1000, unitPrice: 5_500_000 }, { description: 'Print proofs', quantityMilli: 3000, unitPrice: 120_000 }]),
+  q('INV-0046', 'Kestrel Labs', 'sent', [{ description: 'Product photography — day rate', quantityMilli: 2000, unitPrice: 1_800_000 }]),
+  q('INV-0047', 'Lumen & Co.', 'viewed', [{ description: 'Motion graphics — 30s', quantityMilli: 1000, unitPrice: 4_200_000 }]),
+  q('INV-0048', 'Fieldnote Press', 'sent', [{ description: 'Editorial layout — 48 pages', quantityMilli: 48000, unitPrice: 45_000 }]),
+  q('INV-0049', 'Tidewater Café', 'overdue', [{ description: 'Menu redesign', quantityMilli: 1000, unitPrice: 1_600_000 }, { description: 'Signage files', quantityMilli: 4000, unitPrice: 80_000 }]),
+]
+export type PressInvoice = (typeof PRESS_QUEUE)[number]

@@ -72,7 +72,7 @@ export function AnalyticsPage() {
             ].map((f, i) => (
               <div key={f.label} className={cx('border-line py-4 pr-3', i % 2 === 1 && 'border-l pl-4', i >= 2 && 'border-t', 'md:border-l md:pl-5 md:[&:nth-child(4n+1)]:border-l-0 md:[&:nth-child(4n+1)]:pl-0', i < 4 ? 'md:border-t-0' : 'md:border-t')}>
                 <dt className="label" title={f.def}>{f.label}</dt>
-                <dd className={cx('num mt-1.5 text-lg font-semibold sm:text-xl', f.danger && 'text-danger')}>{f.v ?? <Skeleton className="h-6 w-24" />}</dd>
+                <dd className={cx('num pf-wordmark mt-2 text-lg leading-none sm:text-xl xl:text-2xl', f.danger && 'text-danger')}>{f.v ?? <Skeleton className="h-6 w-24" />}</dd>
                 {f.sub && <dd className="text-xs text-muted">{f.sub}</dd>}
               </div>
             ))}

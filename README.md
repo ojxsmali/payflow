@@ -14,11 +14,11 @@ PayFlow is an invoicing and payment-tracking app for freelancers and independent
 
 ## Screenshots
 
-**Public landing page** — what a signed-out visitor sees: an example invoice that walks the real lifecycle (Draft → Sent → Viewed → Partially paid → Paid) with totals from the app's own invoice maths, slow "payment flow" lines behind the hero, and a tabbed gallery of real screens.
+**Public landing page** — what a signed-out visitor sees: a 3D press that stamps example invoices PAID when you click it, an invoice that walks the real lifecycle (Draft → Sent → Viewed → Partially paid → Paid) with totals from the app's own invoice maths, and a tabbed gallery of real screens.
 
 | | |
 |---|---|
-| ![PayFlow landing page: oversized headline and an example invoice that collects payments until a PAID stamp lands](docs/screenshots/landing-desktop.png) | ![Tabbed gallery of the real product screens](docs/screenshots/landing-product-desktop.png) |
+| ![PayFlow landing page: oversized headline above a 3D rubber stamp and a turntable of example invoices](docs/screenshots/landing-desktop.png) | ![Tabbed gallery of the real product screens](docs/screenshots/landing-product-desktop.png) |
 
 <p align="center"><img src="docs/screenshots/landing-mobile.png" width="250" alt="PayFlow landing page on a phone"></p>
 
@@ -41,7 +41,7 @@ PayFlow is an invoicing and payment-tracking app for freelancers and independent
   <img src="docs/screenshots/invoice-detail-mobile.png" width="250" alt="Invoice detail on a phone">
 </p>
 
-*All screenshots show the current "Ledger paper" design with a clearly labelled sample workspace. Desktop screens are 2400 × 1500, phones 3×.*
+*All screenshots show the current "Ultraviolet Press" design with a clearly labelled sample workspace. Desktop screens are 2400 × 1500, phones 3×.*
 <p align="center"><sub>Designed for phones too: bottom navigation, stacked line items, bottom-sheet dialogs.</sub></p>
 
 <sub>Screenshots use the built-in sample workspace; the businesses in it are fictional.</sub>
@@ -74,6 +74,7 @@ PayFlow is an invoicing and payment-tracking app for freelancers and independent
 | Data | Supabase (Postgres, Auth, Storage) | Real auth + RLS without running a server |
 | PDF | `@react-pdf/renderer` | Vector PDF from React components, lazy-loaded |
 | Email | Resend, via one Vercel function (`api/send-invoice.ts`) | Key stays server-side |
+| 3D | three.js, react-three-fiber, drei | The landing press and brand stamp; lazy-loaded with a flat fallback |
 | Charts | Hand-written SVG | Two series and one axis don't need a chart library |
 | Icons | Lucide | Consistent, tree-shaken |
 | Tests | Vitest, PGlite (real Postgres in-process) | Unit, PDF and database/RLS tests without Docker |
@@ -191,10 +192,11 @@ Currencies are never mixed or converted: metrics are per currency (INR, USD, EUR
 
 ## Design
 
-- **Concept — "Ledger paper":** the invoice as a printed document. Near-white paper (`#F5F5F5`), near-black ink (`#0D0D0D`), hairline rules instead of shadows, and one violet "stamp ink" accent (`#5B3DF5`) for actions, focus and the moment an invoice is paid. Green, amber and red stay reserved for paid, partial and overdue.
-- **Type:** Geist for headlines, interface and figures; Newsreader italic for one editorial phrase per headline; Geist Mono for section markers, invoice numbers and references. PDF invoices keep embedded IBM Plex fonts.
-- **Layout:** oversized page titles over a hairline; numbers sit in ruled ledger strips rather than cards; the dashboard leads with what needs action. The sidebar and the landing page's security band are the only black surfaces. Phones get a bottom tab bar with a central "new invoice" button, stacked line items and bottom-sheet dialogs.
-- **Landing page:** an editorial page with numbered sections. Its signature visual is an example invoice on paper that collects its payments on its own (pauses on hover, steps by click, drags and springs back); when the balance reaches zero a violet PAID stamp lands on it. All motion is disabled under `prefers-reduced-motion`. Full spec in [DESIGN.md](DESIGN.md).
+- **Concept — "Ultraviolet Press":** invoices are paper, getting paid is a stamp. Cool paper (`#F1F1EE`), blue-black ink (`#0B0B0F`), ultraviolet stamp ink (`#5B3DF5`) for actions, focus and the moment an invoice is paid, and a lime highlighter (`#D4FF3A`) under the one thing on a screen worth looking at. Green, amber and red stay reserved for paid, partial and overdue.
+- **3D press:** the landing hero is a real-time three.js scene (react-three-fiber) — a rubber stamp over a turntable of example invoices whose totals come from the app's own invoice maths. Click or tap and the stamp slams down, a PAID impression lands, ink flecks fly and the table turns to the next invoice; drag with a mouse to spin it. It is lazy-loaded, lighter on phones (fewer sheets, lower pixel ratio), paused off screen, calm under `prefers-reduced-motion`, and falls back to a flat illustration without WebGL.
+- **Logo & brand kit:** a stamp-impression ring around a heavy P with a lime full stop. One geometry file (`src/lib/brandMark.ts`) draws the logo, the 3D stamp's face, the favicons, PWA icons, OG card and GitHub social preview (`npm run brand`). The kit is in the app at [`/brand`](https://payflow-xi-one.vercel.app/brand).
+- **Type:** Archivo Expanded for headlines and money figures, Archivo for the interface, IBM Plex Mono for invoice numbers and labels. PDF invoices keep embedded IBM Plex fonts.
+- **Interaction:** grab-and-throw cards (mouse only — phones always scroll), sliding lime pills for navigation and tabs, stamps that land with a spring (PAID/VOID on documents, toasts, empty states), magnetic buttons and press ripples. Phones get a floating tab bar with a central "new invoice" button, stacked line items and bottom-sheet dialogs. Full spec in [DESIGN.md](DESIGN.md).
 
 ## Local development
 

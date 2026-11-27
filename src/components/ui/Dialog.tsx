@@ -40,8 +40,8 @@ export function Dialog({ open, onClose, title, description, children, footer, wi
       }}
       aria-labelledby="dialog-title"
       className={cx(
-        'm-auto max-h-[calc(100dvh-2rem)] w-[calc(100vw-2rem)] overflow-hidden rounded-lg border border-line bg-surface p-0 text-ink shadow-[var(--shadow-pop)]',
-        'open:animate-rise max-sm:mb-0 max-sm:w-full max-sm:max-w-none max-sm:rounded-b-none',
+        'm-auto max-h-[calc(100dvh-2rem)] w-[calc(100vw-2rem)] overflow-hidden rounded-[16px] border-2 border-ink bg-surface p-0 text-ink shadow-[var(--shadow-pop)]',
+        'pf-dialog max-sm:mb-0 max-sm:w-full max-sm:max-w-none max-sm:rounded-b-none max-sm:border-x-0 max-sm:border-b-0',
         wide ? 'max-w-2xl' : 'max-w-md',
       )}
     >
@@ -49,10 +49,10 @@ export function Dialog({ open, onClose, title, description, children, footer, wi
         <div className="flex max-h-[calc(100dvh-2rem)] flex-col">
           <div className="flex items-start justify-between gap-4 border-b border-line px-5 py-4">
             <div>
-              <h2 id="dialog-title" className="text-md font-semibold">{title}</h2>
+              <h2 id="dialog-title" className="display text-lg">{title}</h2>
               {description && <div className="mt-1 text-sm text-muted">{description}</div>}
             </div>
-            <button type="button" onClick={onClose} aria-label="Close" className="-mr-1 rounded p-1 text-muted hover:bg-sunken hover:text-ink">
+            <button type="button" onClick={onClose} aria-label="Close" className="pf-press -mr-1 rounded-full p-1.5 text-muted transition-transform duration-300 ease-[var(--ease-spring)] hover:rotate-90 hover:bg-sunken hover:text-ink">
               <X className="size-4" />
             </button>
           </div>

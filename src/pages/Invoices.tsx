@@ -1,5 +1,6 @@
 import { useMemo } from 'react'
 import { useSearchParams } from 'react-router-dom'
+import { motion } from 'motion/react'
 import { FilePlus2, Search, X } from 'lucide-react'
 import { useBusinessData } from '../hooks/useBusinessData'
 import { InvoiceTable, sortInvoices, type Sort, type SortKey } from '../components/invoices/InvoiceTable'
@@ -88,7 +89,7 @@ export function InvoicesPage() {
       />
 
       {/* Status tabs — scroll horizontally on small screens */}
-      <div role="tablist" aria-label="Filter by status" className="-mx-4 mb-4 flex gap-1 overflow-x-auto overflow-y-hidden border-b border-line px-4 sm:mx-0 sm:px-0">
+      <div role="tablist" aria-label="Filter by status" className="-mx-4 mb-5 flex gap-1 overflow-x-auto overflow-y-hidden px-4 py-1 [scrollbar-width:none] sm:mx-0 sm:px-1">
         {(status === 'due_soon' ? [...TABS.slice(0, 2), { value: 'due_soon' as Filter, label: 'Due in 7 days' }, ...TABS.slice(2)] : TABS).map((t) => (
           <button
             key={t.value}
@@ -96,12 +97,13 @@ export function InvoicesPage() {
             aria-selected={status === t.value}
             onClick={() => set({ status: t.value === 'all' ? '' : t.value })}
             className={cx(
-              '-mb-px flex shrink-0 items-center gap-1.5 border-b-2 px-2.5 py-2.5 text-sm transition-colors',
-              status === t.value ? 'border-ink font-medium text-ink' : 'border-transparent text-muted hover:text-ink',
+              'pf-press relative isolate flex h-9 shrink-0 items-center gap-1.5 rounded-full px-3.5 text-sm font-semibold transition-colors',
+              status === t.value ? 'text-ink' : 'text-muted hover:bg-sunken hover:text-ink',
             )}
           >
+            {status === t.value && <motion.span layoutId="pf-status-tab" transition={{ type: 'spring', stiffness: 500, damping: 36 }} aria-hidden className="absolute inset-0 -z-10 rounded-full bg-lime ring-2 ring-ink" />}
             {t.label}
-            {data && <span className="num text-xs text-muted">{counts[t.value] ?? rows.length}</span>}
+            {data && <span className={cx('num rounded-full px-1.5 font-mono text-2xs', status === t.value ? 'bg-ink text-lime' : 'bg-sunken text-muted')}>{counts[t.value] ?? rows.length}</span>}
           </button>
         ))}
       </div>

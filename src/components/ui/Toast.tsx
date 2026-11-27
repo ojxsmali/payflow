@@ -24,9 +24,9 @@ export function ToastProvider({ children }: { children: ReactNode }) {
           <div
             key={t.id}
             role={t.tone === 'error' ? 'alert' : 'status'}
-            className="pointer-events-auto flex max-w-sm animate-rise items-start gap-2.5 rounded-md bg-ink px-3.5 py-2.5 text-sm text-surface shadow-[var(--shadow-pop)]"
+            className="pf-toast pointer-events-auto flex max-w-sm items-start gap-2.5 rounded-[14px] bg-ink px-4 py-3 text-sm font-medium text-surface shadow-[var(--shadow-pop)]"
           >
-            {t.tone === 'error' ? <CircleAlert className="mt-0.5 size-4 shrink-0 text-[#f0a89c]" /> : <CircleCheck className={cx('mt-0.5 size-4 shrink-0', 'text-[#9fd1b4]')} />}
+            {t.tone === 'error' ? <CircleAlert className="mt-0.5 size-4 shrink-0 text-[#ff8f80]" /> : <CircleCheck className={cx('mt-0.5 size-4 shrink-0', 'text-lime')} />}
             <span className="flex-1">{t.message}</span>
             <button onClick={() => dismiss(t.id)} aria-label="Dismiss" className="-mr-1 rounded p-0.5 text-surface/60 hover:text-surface">
               <X className="size-3.5" />

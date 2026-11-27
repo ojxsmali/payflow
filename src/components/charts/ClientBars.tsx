@@ -16,7 +16,7 @@ export function ClientBars({ rows, currency, limit = 5 }: { rows: ClientRevenue[
             <Link to={`/clients/${r.clientId}`} className="truncate text-ink hover:underline">{r.name}</Link>
             <span className="num shrink-0 font-medium">{formatMoney(r.collected, currency)}</span>
           </div>
-          <div className="mt-1.5 flex h-1.5 overflow-hidden rounded-full bg-sunken" aria-hidden>
+          <div className="mt-1.5 flex h-2.5 overflow-hidden rounded-full bg-sunken" aria-hidden>
             <div className="h-full bg-accent" style={{ width: `${(r.collected / max) * 100}%` }} />
             <div className="h-full bg-warning/45" style={{ width: `${(r.outstanding / max) * 100}%` }} />
           </div>

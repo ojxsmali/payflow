@@ -28,11 +28,6 @@ export function InvoiceDocument({ data, logoUrl, className }: { data: InvoiceDoc
         </div>
       </header>
 
-      {(paid || cancelled) && (
-        <p className={cx('mt-6 inline-block rounded-sm border px-2 py-0.5 text-xs font-semibold uppercase tracking-widest', paid ? 'border-success/40 text-success' : 'border-line-strong text-muted')}>
-          {paid ? 'Paid' : 'Cancelled'}
-        </p>
-      )}
 
       <dl className="mt-8 grid grid-cols-2 gap-x-6 gap-y-4 border-y border-line py-5 sm:grid-cols-3">
         <div><dt className="label">Issued</dt><dd className="mt-1 text-sm">{formatDate(data.issue_date)}</dd></div>
@@ -90,7 +85,14 @@ export function InvoiceDocument({ data, logoUrl, className }: { data: InvoiceDoc
         ))}
       </ul>
 
-      <dl className="num ml-auto mt-5 w-full max-w-xs space-y-2 text-sm">
+      <div className="mt-5 flex flex-col-reverse sm:flex-row sm:items-start sm:justify-between">
+        {(paid || cancelled) && (
+          <div aria-label={paid ? 'Paid' : 'Cancelled'} className={cx('pf-stamp pf-doc-stamp pointer-events-none mx-auto mb-2 w-max px-3 py-1.5 text-center sm:mx-0 sm:mb-0 sm:ml-4 sm:mt-6', paid ? 'text-accent' : 'text-danger')}>
+            <span className="block text-2xl font-black leading-none tracking-[0.08em] sm:text-3xl">{paid ? 'PAID' : 'VOID'}</span>
+            <span className="block font-mono text-[9px] tracking-[0.16em]">{paid ? 'IN FULL' : 'CANCELLED'}</span>
+          </div>
+        )}
+      <dl className="num ml-auto w-full max-w-xs space-y-2 text-sm">
         <div className="flex justify-between"><dt className="text-ink-2">Subtotal</dt><dd>{m(data.subtotal)}</dd></div>
         {data.discount_amount > 0 && (
           <div className="flex justify-between"><dt className="text-ink-2">{discountLabel(data)}</dt><dd>−{m(data.discount_amount)}</dd></div>
@@ -104,6 +106,7 @@ export function InvoiceDocument({ data, logoUrl, className }: { data: InvoiceDoc
           </>
         )}
       </dl>
+      </div>
 
       {(data.payment_terms || data.from.payment_instructions || data.notes) && (
         <div className="mt-10 grid gap-6 border-t border-line pt-6 text-sm sm:grid-cols-2">

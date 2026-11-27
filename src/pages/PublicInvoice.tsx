@@ -55,9 +55,14 @@ export function PublicInvoicePage() {
       <div className="mx-auto max-w-3xl">
         {data === undefined && !error && <Skeleton className="h-[720px]" />}
         {(data === null || (error && !data)) && (
-          <div className="py-24 text-center">
-            <h1 className="display text-2xl">Invoice not found</h1>
-            <p className="mt-2 text-sm text-muted">{error ?? 'This link is invalid or the invoice is no longer available. Contact the sender for a new link.'}</p>
+          <div className="flex flex-col items-center py-20 text-center">
+            <div className="pf-stamp rotate-[-8deg] px-5 py-2 text-danger" aria-hidden>
+              <span className="block text-4xl font-black tracking-[0.08em]">VOID</span>
+              <span className="block font-mono text-[10px] tracking-[0.16em]">LINK NOT RECOGNISED</span>
+            </div>
+            <h1 className="pf-display mt-10 text-4xl sm:text-5xl">Invoice not found</h1>
+            <p className="mt-3 max-w-md text-base text-ink-2">{error ?? 'This link is invalid or the invoice is no longer available. Contact the sender for a new link.'}</p>
+            <a href="/" className="mt-8 inline-flex items-center gap-2 text-sm font-semibold text-ink-2 hover:text-ink"><LogoMark className="size-5" /> What is PayFlow?</a>
           </div>
         )}
         {data && (
@@ -66,7 +71,7 @@ export function PublicInvoicePage() {
               <div>
                 <p className="text-sm text-muted">{data.from.business_name || data.from.name} sent you an invoice</p>
                 {data.status === 'paid' ? (
-                  <p className="mt-1 text-lg font-semibold text-success">Paid in full — thank you.</p>
+                  <p className="mt-1 inline-block bg-lime px-1.5 text-lg font-bold text-ink">Paid in full — thank you.</p>
                 ) : data.status === 'cancelled' ? (
                   <p className="mt-1 text-lg font-semibold text-muted">This invoice was cancelled. Nothing is due.</p>
                 ) : (

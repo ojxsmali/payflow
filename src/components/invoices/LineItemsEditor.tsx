@@ -46,8 +46,8 @@ export function LineItemsEditor({ items, onChange, amounts, currency, errors }: 
   }
 
   return (
-    <div>
-      <div className="hidden grid-cols-[1fr_5rem_8.5rem_8.5rem_4.5rem] gap-3 border-b border-line pb-2 text-xs font-medium text-muted md:grid" aria-hidden>
+    <div className="@container">
+      <div className="hidden grid-cols-[1fr_5rem_8.5rem_8.5rem_4.5rem] gap-3 border-b border-line pb-2 text-xs font-medium text-muted @2xl:grid" aria-hidden>
         <span>Description</span><span className="text-right">Qty</span><span className="text-right">Rate</span><span className="text-right">Amount</span><span />
       </div>
       <ol ref={listRef} className="divide-y divide-line" aria-label="Line items">
@@ -55,9 +55,9 @@ export function LineItemsEditor({ items, onChange, amounts, currency, errors }: 
           const e = errors[it.key] ?? {}
           const n = idx + 1
           return (
-            <li key={it.key} className="grid grid-cols-2 gap-x-3 gap-y-2 py-3 md:grid-cols-[1fr_5rem_8.5rem_8.5rem_4.5rem] md:items-start">
-              <div className="col-span-2 md:col-span-1">
-                <label htmlFor={`${it.key}-d`} className="label mb-1 block md:sr-only">Item {n} description</label>
+            <li key={it.key} className="grid grid-cols-2 gap-x-3 gap-y-2 py-3 @2xl:grid-cols-[1fr_5rem_8.5rem_8.5rem_4.5rem] @2xl:items-start">
+              <div className="col-span-2 @2xl:col-span-1">
+                <label htmlFor={`${it.key}-d`} className="label mb-1 block @2xl:sr-only">Item {n} description</label>
                 <textarea
                   id={`${it.key}-d`}
                   data-desc
@@ -76,17 +76,17 @@ export function LineItemsEditor({ items, onChange, amounts, currency, errors }: 
                 {e.description && <p id={`${it.key}-de`} className="mt-1 text-xs text-danger">{e.description}</p>}
               </div>
               <div>
-                <label htmlFor={`${it.key}-q`} className="label mb-1 block md:sr-only">Item {n} quantity</label>
+                <label htmlFor={`${it.key}-q`} className="label mb-1 block @2xl:sr-only">Item {n} quantity</label>
                 <Input id={`${it.key}-q`} inputMode="decimal" value={it.quantity} invalid={!!e.quantity} aria-describedby={e.quantity ? `${it.key}-qe` : undefined} onChange={(ev) => update(it.key, { quantity: ev.target.value })} className="num text-right" />
                 {e.quantity && <p id={`${it.key}-qe`} className="mt-1 text-xs text-danger">{e.quantity}</p>}
               </div>
               <div>
-                <label htmlFor={`${it.key}-r`} className="label mb-1 block md:sr-only">Item {n} rate</label>
+                <label htmlFor={`${it.key}-r`} className="label mb-1 block @2xl:sr-only">Item {n} rate</label>
                 <Input id={`${it.key}-r`} inputMode="decimal" placeholder="0.00" value={it.rate} invalid={!!e.rate} aria-describedby={e.rate ? `${it.key}-re` : undefined} onChange={(ev) => update(it.key, { rate: ev.target.value })} className="num text-right" />
                 {e.rate && <p id={`${it.key}-re`} className="mt-1 text-xs text-danger">{e.rate}</p>}
               </div>
-              <div className="num flex h-9.5 items-center text-sm text-muted md:justify-end md:text-base md:text-ink">
-                <span className="md:hidden">Amount&nbsp;</span>
+              <div className="num flex h-9.5 items-center text-sm text-muted @2xl:justify-end @2xl:text-base @2xl:text-ink">
+                <span className="@2xl:hidden">Amount&nbsp;</span>
                 <output aria-label={`Item ${n} amount`} className={cx(amounts[idx] === null && 'text-muted')}>{amounts[idx] === null ? '—' : formatMoney(amounts[idx]!, currency, { cents: true })}</output>
               </div>
               <div className="flex h-9.5 items-center justify-end gap-0.5">

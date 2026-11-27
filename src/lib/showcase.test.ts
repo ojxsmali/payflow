@@ -1,5 +1,7 @@
 import { describe, expect, it } from 'vitest'
-import { EXAMPLE_PAYMENTS, EXAMPLE_TOTALS, LIFECYCLE } from './showcase'
+import { EXAMPLE_PAYMENTS, EXAMPLE_TOTALS, LIFECYCLE, PRESS_QUEUE } from './showcase'
+import { calcInvoice } from './money'
+import { OPEN_STATUSES } from './status'
 import { STATUS_ORDER } from './status'
 
 describe('landing-page example invoice', () => {
@@ -21,5 +23,17 @@ describe('landing-page example invoice', () => {
     expect(LIFECYCLE.at(-1)?.status).toBe('paid')
     expect(LIFECYCLE.at(-1)?.paid).toBe(EXAMPLE_TOTALS.total)
     expect(LIFECYCLE.every((s, i) => i === 0 || s.paid >= LIFECYCLE[i - 1].paid)).toBe(true)
+  })
+})
+
+describe('landing-page press queue', () => {
+  it('prices every example invoice with the real maths and only queues money still owed', () => {
+    expect(PRESS_QUEUE[0].total).toBe(EXAMPLE_TOTALS.total)
+    for (const inv of PRESS_QUEUE.slice(1)) {
+      expect(inv.total).toBe(calcInvoice({ items: inv.items, discountType: 'percent', discountValue: 0, taxRateBp: 1800 }).total)
+      expect(inv.total).toBeGreaterThan(0)
+    }
+    expect(PRESS_QUEUE.every((i) => OPEN_STATUSES.includes(i.status))).toBe(true)
+    expect(new Set(PRESS_QUEUE.map((i) => i.no)).size).toBe(PRESS_QUEUE.length)
   })
 })

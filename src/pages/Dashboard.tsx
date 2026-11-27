@@ -1,8 +1,8 @@
-import { useMemo, useState } from 'react'
+import { useMemo, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { motion } from 'motion/react'
+import { motion, useDragControls, useMotionValue, useTransform } from 'motion/react'
 import { spotlight } from '../lib/effects'
-import { ArrowRight, FilePlus2, UserPlus } from 'lucide-react'
+import { ArrowUpRight, FilePlus2, UserPlus } from 'lucide-react'
 import { useProfile } from '../auth/AuthProvider'
 import { useBusinessData } from '../hooks/useBusinessData'
 import { monthlySeries, revenueByClient, summarize, type Summary } from '../lib/analytics'
@@ -56,7 +56,7 @@ export function DashboardPage() {
       />
 
       {/* Ledger strip: four numbers that answer "where do I stand?" — each opens the invoices behind it */}
-      <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
+      <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
         <Figure
           label={`Collected in ${month}`}
           value={s && formatMoney(s.collectedThisMonth, currency)}
@@ -66,9 +66,9 @@ export function DashboardPage() {
           to="/analytics"
           hero
         />
-        <Figure label="Outstanding" value={s && formatMoney(s.outstanding, currency)} sub={s && plural(s.outstandingCount, 'open invoice')} to="/invoices?status=open" />
-        <Figure label="Overdue" tone={s && s.overdue > 0 ? 'danger' : undefined} value={s && formatMoney(s.overdue, currency)} sub={s && (s.overdueCount ? plural(s.overdueCount, 'invoice') : 'Nothing overdue')} to="/invoices?status=overdue" />
-        <Figure label="Due in the next 7 days" value={s && formatMoney(s.dueSoon, currency)} sub={s && plural(s.dueSoonCount, 'invoice')} to="/invoices?status=due_soon" />
+        <Figure index={1} label="Outstanding" value={s && formatMoney(s.outstanding, currency)} sub={s && plural(s.outstandingCount, 'open invoice')} to="/invoices?status=open" />
+        <Figure index={2} label="Overdue" tone={s && s.overdue > 0 ? 'danger' : undefined} value={s && formatMoney(s.overdue, currency)} sub={s && (s.overdueCount ? plural(s.overdueCount, 'invoice') : 'Nothing overdue')} to="/invoices?status=overdue" />
+        <Figure index={3} wide label="Due in the next 7 days" value={s && formatMoney(s.dueSoon, currency)} sub={s && plural(s.dueSoonCount, 'invoice')} to="/invoices?status=due_soon" />
       </div>
       {s && s.otherCurrencies.length > 0 && (
         <p className="mt-2 text-xs text-muted">Figures are in {currency}. Invoices in {s.otherCurrencies.join(', ')} are tracked separately on the Analytics page.</p>
@@ -110,29 +110,59 @@ function plural(n: number, word: string) {
   return `${n} ${word}${n === 1 ? '' : 's'}`
 }
 
-function Figure({ label, value, sub, to, tone, hero }: { label: string; value?: string | false | null; sub?: React.ReactNode; to: string; tone?: 'danger'; hero?: boolean }) {
+/**
+ * A ledger figure. Opens the invoices behind it on click; with a mouse it can
+ * also be grabbed and thrown — it springs home. Touch never drags.
+ */
+function Figure({ label, value, sub, to, tone, hero, wide, index = 0 }: { label: string; value?: string | false | null; sub?: React.ReactNode; to: string; tone?: 'danger'; hero?: boolean; wide?: boolean; index?: number }) {
+  const controls = useDragControls()
+  const dragged = useRef(false)
+  const x = useMotionValue(0)
+  const rotate = useTransform(x, [-220, 220], [-7, 7])
   return (
-    <motion.div whileHover={{ y: -4 }} whileTap={{ scale: 0.97 }} transition={{ type: 'spring', stiffness: 420, damping: 24 }} className={hero ? 'col-span-2 lg:col-span-1' : ''}>
+    <motion.div
+      drag
+      dragControls={controls}
+      dragListener={false}
+      dragSnapToOrigin
+      dragElastic={0.5}
+      dragTransition={{ bounceStiffness: 420, bounceDamping: 14 }}
+      onPointerDown={(e) => {
+        dragged.current = false
+        if (e.pointerType === 'mouse') controls.start(e)
+      }}
+      onDragStart={() => (dragged.current = true)}
+      initial={{ y: 18 }}
+      animate={{ y: 0 }}
+      whileHover={{ y: -5 }}
+      whileTap={{ scale: 0.97 }}
+      whileDrag={{ scale: 1.05, zIndex: 10 }}
+      transition={{ type: 'spring', stiffness: 420, damping: 24, delay: index * 0.06 }}
+      style={{ x, rotate, touchAction: 'pan-y' }}
+      className={cx('relative', hero || wide ? 'col-span-2 lg:col-span-1' : '')}
+    >
       <Link
         to={to}
+        draggable={false}
+        onClickCapture={(e) => {
+          if (dragged.current) e.preventDefault()
+        }}
         onPointerMove={spotlight}
         className={cx(
-          'pf-spot group flex h-full flex-col rounded-lg border p-5 transition-shadow',
-          hero
-            ? 'overflow-hidden border-transparent bg-night text-white'
-            : 'border-line bg-surface',
+          'pf-spot group flex h-full flex-col rounded-[14px] p-5 transition-shadow [@media(pointer:fine)]:cursor-grab',
+          hero ? 'overflow-hidden bg-night text-white shadow-[0_24px_40px_-24px_rgb(11_11_15/0.7)]' : 'pf-sheet',
         )}
       >
-        <p className={cx('relative flex items-center justify-between text-xs font-medium', hero ? 'text-white/65' : 'text-muted')}>
-          {label}
-          <ArrowRight className="size-3.5 -translate-x-1 opacity-0 transition-all duration-300 group-hover:translate-x-0 group-hover:opacity-100" aria-hidden />
+        <p className={cx('relative flex items-center justify-between gap-2 text-xs font-semibold', hero ? 'text-white/65' : 'text-muted')}>
+          <span className="leading-tight">{label}</span>
+          <ArrowUpRight className="size-4 shrink-0 transition-transform duration-300 ease-[var(--ease-spring)] group-hover:-translate-y-0.5 group-hover:translate-x-0.5" aria-hidden />
         </p>
         {value ? (
-          <p className={cx('num relative mt-4 text-xl font-semibold tracking-[-0.045em] sm:text-[2.1rem]', hero ? 'text-white' : tone === 'danger' ? 'text-danger' : 'text-ink')}>{value}</p>
+          <p className={cx('num pf-wordmark relative mt-5 text-[1.45rem] leading-none sm:text-[2rem] lg:text-[clamp(1.35rem,2vw,2rem)]', hero ? 'text-lime' : tone === 'danger' ? 'text-danger' : 'text-ink')}>{value}</p>
         ) : (
-          <Skeleton className="mt-4 h-8 w-28" />
+          <Skeleton className={cx('mt-5 h-8 w-28', hero && 'opacity-20')} />
         )}
-        <p className={cx('relative mt-1 min-h-5 text-sm', hero ? 'text-white/60 [&_.text-success]:text-brass [&_.text-danger]:text-[#ff8f80]' : 'text-muted')}>{sub}</p>
+        <p className={cx('relative mt-2 min-h-5 text-sm', hero ? 'text-white/60 [&_.text-success]:text-lime [&_.text-danger]:text-[#ff8f80]' : 'text-muted')}>{sub}</p>
       </Link>
     </motion.div>
   )
@@ -188,22 +218,22 @@ function FirstRun({ name, hasClient }: { name: string; hasClient: boolean }) {
   return (
     <div className="animate-rise">
       <PageHeader eyebrow="Overview" title={`Welcome to PayFlow${name ? `, ${name.split(' ')[0]}` : ''}.`} meta="Create your first client and invoice to start tracking your business." />
-      <ol className="grid gap-px overflow-hidden rounded-lg border border-line bg-line sm:grid-cols-3">
+      <ol className="grid gap-4 sm:grid-cols-3">
         {[
           { n: 1, title: hasClient ? 'Client added' : 'Add a client', body: hasClient ? 'You can add more any time from Clients.' : 'Who you bill: name, email, and any tax details for the invoice.', action: hasClient ? <Button to="/clients">View clients</Button> : <Button variant="primary" to="/clients?new=1" icon={<UserPlus className="size-4" />}>Add client</Button> },
           { n: 2, title: 'Create an invoice', body: 'Line items, tax and discount. Totals are calculated for you.', action: <Button variant={hasClient ? 'primary' : 'secondary'} to="/invoices/new" icon={<FilePlus2 className="size-4" />}>Create invoice</Button> },
           { n: 3, title: 'Send and track', body: 'Email it or share a link, then record payments as they arrive.', action: null },
         ].map((s) => (
-          <li key={s.n} className="flex flex-col gap-2 bg-surface p-6">
-            <span className="font-mono text-xs text-muted">0{s.n}</span>
-            <h2 className="text-md font-semibold">{s.title}</h2>
+          <motion.li key={s.n} initial={{ opacity: 0, y: 24, rotate: s.n % 2 ? -1.5 : 1.5 }} animate={{ opacity: 1, y: 0, rotate: 0 }} transition={{ type: 'spring', stiffness: 260, damping: 20, delay: s.n * 0.08 }} className="pf-sheet flex flex-col gap-2 rounded-[14px] p-6">
+            <span className="grid size-9 place-items-center rounded-full bg-lime font-mono text-sm font-medium text-ink">0{s.n}</span>
+            <h2 className="display mt-2 text-xl">{s.title}</h2>
             <p className="text-sm text-ink-2">{s.body}</p>
             {s.action && <div className="mt-auto pt-3">{s.action}</div>}
-          </li>
+          </motion.li>
         ))}
       </ol>
-      <div className="mt-8 flex flex-col gap-3 border-t border-line pt-6 text-sm sm:flex-row sm:items-center sm:justify-between">
-        <p className="text-ink-2">Just looking around? Load a sample workspace with four made-up clients and a few months of invoices. Everything it adds is labelled <em>Sample</em>.</p>
+      <div className="mt-10 flex flex-col gap-3 rounded-[14px] bg-night p-5 text-sm text-white sm:flex-row sm:items-center sm:justify-between [&_em]:text-lime">
+        <p className="text-white/75">Just looking around? Load a sample workspace with four made-up clients and a few months of invoices. Everything it adds is labelled <em>Sample</em>.</p>
         <Button onClick={loadSample} loading={busy} className="shrink-0">Load sample data</Button>
       </div>
     </div>

@@ -3,35 +3,44 @@ import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
 import { humanError } from '../lib/errors'
 import { Button, ErrorNotice, Field, Input } from '../components/ui'
-import { Logo, LogoMark } from '../components/layout/Logo'
+import { Logo, LogoMark, Wordmark } from '../components/layout/Logo'
+import { Press3D } from '../components/three/Scene3D'
+import { FlatPress } from '../components/brand/FlatPress'
 import { useAuth } from '../auth/AuthProvider'
 
 function AuthLayout({ title, subtitle, children, footer }: { title: string; subtitle?: string; children: ReactNode; footer?: ReactNode }) {
   return (
     <div className="grid min-h-dvh lg:grid-cols-[1fr_minmax(0,560px)]">
-      <aside className="relative hidden flex-col justify-between overflow-hidden bg-night px-12 py-10 text-white lg:flex">
+      <aside className="relative hidden flex-col overflow-hidden bg-night px-12 py-10 text-white lg:flex">
+        <div className="pointer-events-none absolute inset-0 opacity-[0.12] [background-image:radial-gradient(#fff_1px,transparent_1.2px)] [background-size:22px_22px]" aria-hidden />
         <Link to="/" aria-label="PayFlow home" className="relative flex w-max items-center gap-2.5">
           <LogoMark className="size-8" />
-          <span className="text-[17px] font-semibold tracking-[-0.035em]">PayFlow</span>
+          <Wordmark className="text-white" />
         </Link>
-        <div className="relative max-w-md">
-          <p className="pf-display text-6xl">Create invoices. Track payments. <span className="pf-serif text-brass">Know what’s outstanding.</span></p>
-          <dl className="mt-10 grid grid-cols-3 gap-6 border-t border-white/20 pt-6 text-sm">
-            <div><dt className="pf-label !text-brass">Draft</dt><dd className="mt-1.5 text-white/70">Build the invoice, preview the PDF.</dd></div>
-            <div><dt className="pf-label !text-brass">Send</dt><dd className="mt-1.5 text-white/70">Email it or share a private link.</dd></div>
-            <div><dt className="pf-label !text-brass">Get paid</dt><dd className="mt-1.5 text-white/70">Record payments, see what’s still due.</dd></div>
+        <Press3D mode="single" className="relative -mx-12 min-h-[300px] flex-1" fallback={<FlatPress single />} />
+        <div className="relative max-w-lg">
+          <p className="pf-display text-[clamp(2.4rem,3.6vw,3.6rem)]">
+            Create invoices. Track payments. <span className="text-lime">Know what’s outstanding.</span>
+          </p>
+          <dl className="mt-8 grid grid-cols-3 gap-6 border-t border-white/20 pt-5 text-sm">
+            <div><dt className="pf-label !text-lime">Draft</dt><dd className="mt-1.5 text-white/70">Build the invoice, preview the PDF.</dd></div>
+            <div><dt className="pf-label !text-lime">Send</dt><dd className="mt-1.5 text-white/70">Email it or share a private link.</dd></div>
+            <div><dt className="pf-label !text-lime">Get paid</dt><dd className="mt-1.5 text-white/70">Record payments, see what’s still due.</dd></div>
           </dl>
         </div>
-        <p className="pf-label relative !text-white/50">For freelancers and independent professionals.</p>
       </aside>
-      <main className="flex flex-col px-5 py-8 sm:px-10">
-        <div className="lg:hidden"><Link to="/" aria-label="PayFlow home"><Logo /></Link></div>
-        <div className="my-auto w-full max-w-sm self-center py-10">
-          <h1 className="pf-display text-4xl">{title}</h1>
-          {subtitle && <p className="mt-2 text-sm text-muted">{subtitle}</p>}
-          <div className="mt-8">{children}</div>
-          {footer && <div className="mt-8 border-t border-line pt-5 text-sm text-muted">{footer}</div>}
+      <main className="flex flex-col px-5 py-6 sm:px-10 sm:py-8">
+        <div className="flex items-center justify-between lg:hidden">
+          <Link to="/" aria-label="PayFlow home"><Logo /></Link>
+          <Link to="/" className="text-sm font-semibold text-ink-2 hover:text-ink">Home</Link>
         </div>
+        <div className="my-auto w-full max-w-sm self-center py-10">
+          <h1 className="pf-display text-[2.6rem] sm:text-5xl">{title}</h1>
+          {subtitle && <p className="mt-3 text-base text-ink-2">{subtitle}</p>}
+          <div className="mt-8">{children}</div>
+          {footer && <div className="mt-8 border-t-2 border-ink pt-5 text-sm text-ink-2">{footer}</div>}
+        </div>
+        <p className="pf-label text-center lg:text-left">For freelancers and independent professionals</p>
       </main>
     </div>
   )
@@ -187,7 +196,7 @@ export function SetupNeeded() {
   return (
     <div className="mx-auto max-w-lg px-5 py-20">
       <Logo />
-      <h1 className="display mt-10 text-2xl">Connect a database to start</h1>
+      <h1 className="pf-display mt-10 text-4xl">Connect a database to start</h1>
       <p className="mt-3 text-sm text-ink-2">
         PayFlow needs a Supabase project. Copy <code className="font-mono text-xs">.env.example</code> to{' '}
         <code className="font-mono text-xs">.env.local</code>, add <code className="font-mono text-xs">VITE_SUPABASE_URL</code> and{' '}

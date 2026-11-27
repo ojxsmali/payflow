@@ -1,6 +1,8 @@
 import { forwardRef, useId, type ButtonHTMLAttributes, type InputHTMLAttributes, type ReactNode, type SelectHTMLAttributes, type TextareaHTMLAttributes } from 'react'
 import { Link } from 'react-router-dom'
-import { LoaderCircle } from 'lucide-react'
+import { motion } from 'motion/react'
+import { CircleAlert, LoaderCircle } from 'lucide-react'
+import { LogoMark } from '../layout/Logo'
 import type { InvoiceStatus } from '../../types'
 import { STATUS_META } from '../../lib/status'
 import { ripple } from '../../lib/effects'
@@ -12,12 +14,12 @@ export function cx(...c: (string | false | null | undefined)[]) {
 // ── Button ──────────────────────────────────────────────────────────────────
 type Variant = 'primary' | 'secondary' | 'ghost' | 'danger'
 const variants: Record<Variant, string> = {
-  primary: 'bg-accent text-surface border border-accent hover:bg-accent-hover hover:shadow-[0_8px_24px_-6px_rgb(91_61_245/0.55)]',
-  secondary: 'bg-surface text-ink border border-line-strong hover:border-ink-2/50 hover:bg-white',
-  ghost: 'text-ink-2 hover:text-ink hover:bg-sunken border border-transparent',
-  danger: 'bg-surface text-danger border border-line-strong hover:border-danger/60 hover:bg-danger-soft/50',
+  primary: 'bg-accent text-white border-2 border-accent font-bold hover:bg-accent-hover hover:border-accent-hover shadow-[var(--shadow-violet)] hover:-translate-y-0.5',
+  secondary: 'bg-surface text-ink border-2 border-ink/15 font-semibold hover:border-ink hover:-translate-y-0.5',
+  ghost: 'text-ink-2 font-semibold hover:text-ink hover:bg-sunken border-2 border-transparent',
+  danger: 'bg-surface text-danger border-2 border-danger/30 font-semibold hover:border-danger hover:bg-danger-soft/60',
 }
-const sizes = { sm: 'h-8 px-3 text-sm gap-1.5', md: 'h-9.5 px-4 text-base gap-2' }
+const sizes = { sm: 'h-8 px-3.5 text-sm gap-1.5', md: 'h-10 px-5 text-base gap-2' }
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: Variant
@@ -28,9 +30,9 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 }
 export function Button({ variant = 'secondary', size = 'md', loading, icon, to, className, children, disabled, ...rest }: ButtonProps) {
   const cls = cx(
-    'pf-press relative isolate overflow-hidden inline-flex items-center justify-center rounded-md font-medium whitespace-nowrap select-none',
+    'pf-press relative isolate overflow-hidden inline-flex items-center justify-center rounded-full whitespace-nowrap select-none',
     'transition-[background-color,border-color,color,transform,box-shadow] duration-[var(--duration-base)] ease-[var(--ease-spring)]',
-    'disabled:opacity-50 disabled:pointer-events-none',
+    'disabled:opacity-45 disabled:shadow-none disabled:pointer-events-none',
     variants[variant], sizes[size], className,
   )
   const inner = (
@@ -51,8 +53,8 @@ export function Button({ variant = 'secondary', size = 'md', loading, icon, to, 
 /** Inputs fill their container unless a width class is passed in. */
 const width = (className?: string) => (/(^|\s)(w-|min-w-|flex-1)/.test(className ?? '') ? '' : 'w-full')
 const control =
-  'rounded-md border border-line-strong bg-surface px-3 text-base text-ink placeholder:text-muted/70 ' +
-  'transition-colors duration-[var(--duration-fast)] hover:border-ink-2/40 focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/15 ' +
+  'rounded-md border-2 border-line bg-surface px-3 text-base text-ink placeholder:text-muted/70 ' +
+  'transition-[border-color,box-shadow] duration-[var(--duration-fast)] hover:border-line-strong focus:border-accent focus:outline-none focus:shadow-[0_0_0_4px_rgb(91_61_245/0.14)] ' +
   'aria-[invalid=true]:border-danger disabled:bg-sunken disabled:text-muted'
 
 interface FieldProps {
@@ -69,7 +71,7 @@ export function Field({ label, hint, error, optional, className, children }: Fie
   const errId = error ? `${id}-err` : undefined
   return (
     <div className={cx('flex flex-col gap-1.5', className)}>
-      <label htmlFor={id} className="label flex justify-between">
+      <label htmlFor={id} className="label flex justify-between font-semibold text-ink-2">
         <span>{label}</span>
         {optional && <span className="font-normal text-muted/80">Optional</span>}
       </label>
@@ -85,7 +87,7 @@ export function Field({ label, hint, error, optional, className, children }: Fie
 
 type InputProps = InputHTMLAttributes<HTMLInputElement> & { invalid?: boolean }
 export const Input = forwardRef<HTMLInputElement, InputProps>(function Input({ className, invalid, ...rest }, ref) {
-  return <input ref={ref} aria-invalid={invalid || undefined} className={cx(control, width(className), 'h-9.5', className)} {...rest} />
+  return <input ref={ref} aria-invalid={invalid || undefined} className={cx(control, width(className), 'h-10', className)} {...rest} />
 })
 
 export function Textarea({ className, invalid, ...rest }: TextareaHTMLAttributes<HTMLTextAreaElement> & { invalid?: boolean }) {
@@ -96,7 +98,7 @@ export function Select({ className, invalid, children, ...rest }: SelectHTMLAttr
   return (
     <select
       aria-invalid={invalid || undefined}
-      className={cx(control, width(className), 'h-9.5 appearance-none pr-8 bg-[url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2712%27%20height%3D%2712%27%20fill%3D%27none%27%20stroke%3D%27%236f6d66%27%20stroke-width%3D%271.5%27%3E%3Cpath%20d%3D%27m3%204.5%203%203%203-3%27/%3E%3C/svg%3E")] bg-[length:12px] bg-[right_10px_center] bg-no-repeat', className)}
+      className={cx(control, width(className), 'h-10 appearance-none pr-8 bg-[url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2712%27%20height%3D%2712%27%20fill%3D%27none%27%20stroke%3D%27%236f6d66%27%20stroke-width%3D%271.5%27%3E%3Cpath%20d%3D%27m3%204.5%203%203%203-3%27/%3E%3C/svg%3E")] bg-[length:12px] bg-[right_10px_center] bg-no-repeat', className)}
       {...rest}
     >
       {children}
@@ -112,8 +114,9 @@ export function Segmented<T extends string>({ value, onChange, options, label, s
   label: string
   size?: 'sm' | 'md'
 }) {
+  const pill = useId()
   return (
-    <div role="radiogroup" aria-label={label} className="inline-flex rounded-md border border-line-strong bg-surface p-0.5">
+    <div role="radiogroup" aria-label={label} className="inline-flex rounded-full border-2 border-ink/15 bg-surface p-0.5">
       {options.map((o) => (
         <button
           key={o.value}
@@ -132,11 +135,12 @@ export function Segmented<T extends string>({ value, onChange, options, label, s
           }}
           tabIndex={value === o.value ? 0 : -1}
           className={cx(
-            'rounded-[5px] font-medium transition-colors duration-[var(--duration-fast)]',
-            size === 'sm' ? 'px-2.5 h-7 text-xs' : 'px-3 h-8 text-sm',
-            value === o.value ? 'bg-ink text-surface' : 'text-ink-2 hover:text-ink',
+            'pf-press relative isolate whitespace-nowrap rounded-full font-semibold transition-colors duration-[var(--duration-fast)]',
+            size === 'sm' ? 'px-3 h-7 text-xs' : 'px-3.5 h-8 text-sm',
+            value === o.value ? 'text-white' : 'text-ink-2 hover:text-ink',
           )}
         >
+          {value === o.value && <motion.span layoutId={pill} transition={{ type: 'spring', stiffness: 500, damping: 36 }} aria-hidden className="absolute inset-0 -z-10 rounded-full bg-ink" />}
           {o.label}
         </button>
       ))}
@@ -151,7 +155,7 @@ const toneDot = { muted: 'bg-muted/60', accent: 'bg-accent', success: 'bg-succes
 export function StatusBadge({ status, className }: { status: InvoiceStatus; className?: string }) {
   const m = STATUS_META[status]
   return (
-    <span className={cx('inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-semibold tracking-normal whitespace-nowrap', toneText[m.tone], toneBg[m.tone], className)} title={m.help}>
+    <span className={cx('inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-bold tracking-normal whitespace-nowrap', toneText[m.tone], toneBg[m.tone], className)} title={m.help}>
       <span aria-hidden className={cx('pf-dot relative size-1.5 rounded-full', toneDot[m.tone], (status === 'sent' || status === 'viewed' || status === 'overdue') && 'pf-pulse')} />
       <span className={status === 'cancelled' ? 'line-through decoration-muted/50' : undefined}>{m.label}</span>
     </span>
@@ -160,7 +164,7 @@ export function StatusBadge({ status, className }: { status: InvoiceStatus; clas
 
 export function SampleTag() {
   return (
-    <span className="rounded-sm border border-line-strong px-1 py-px text-2xs font-medium uppercase tracking-wider text-muted" title="Created by “Load sample data”. Remove it in Settings.">
+    <span className="rounded-sm bg-lime px-1 py-px font-mono text-2xs font-medium uppercase tracking-wider text-ink" title="Created by “Load sample data”. Remove it in Settings.">
       Sample
     </span>
   )
@@ -169,13 +173,13 @@ export function SampleTag() {
 // ── Layout helpers ──────────────────────────────────────────────────────────
 export function PageHeader({ title, eyebrow, meta, actions }: { title: ReactNode; eyebrow?: ReactNode; meta?: ReactNode; actions?: ReactNode }) {
   return (
-    <header className="mb-10 flex flex-col gap-4 border-b border-line pb-6 sm:flex-row sm:items-end sm:justify-between">
+    <header className="mb-10 flex flex-col gap-4 border-b-2 border-ink pb-6 sm:flex-row sm:items-end sm:justify-between">
       <div className="min-w-0">
         {eyebrow && <div className="pf-label mb-3">{eyebrow}</div>}
-        <h1 className="pf-display text-[2.5rem] text-ink break-words sm:text-[3.5rem]">{title}</h1>
+        <h1 className="pf-display text-[2.1rem] text-ink break-words sm:text-[3.25rem] lg:text-[3.75rem]">{title}</h1>
         {meta && <div className="mt-2 text-sm text-muted">{meta}</div>}
       </div>
-      {actions && <div className="flex flex-wrap items-center gap-2 no-print">{actions}</div>}
+      {actions && <div className="flex shrink-0 flex-wrap items-center gap-2 no-print sm:flex-nowrap">{actions}</div>}
     </header>
   )
 }
@@ -183,8 +187,8 @@ export function PageHeader({ title, eyebrow, meta, actions }: { title: ReactNode
 export function Section({ title, action, children, className }: { title: string; action?: ReactNode; children: ReactNode; className?: string }) {
   return (
     <section className={className} aria-label={title}>
-      <div className="mb-3 flex items-baseline justify-between gap-4 border-b border-line pb-2">
-        <h2 className="text-sm font-semibold text-ink">{title}</h2>
+      <div className="mb-3 flex items-baseline justify-between gap-4 border-b-2 border-ink pb-2">
+        <h2 className="text-md font-extrabold tracking-[-0.02em] text-ink [font-stretch:115%]">{title}</h2>
         {action}
       </div>
       {children}
@@ -194,11 +198,20 @@ export function Section({ title, action, children, className }: { title: string;
 
 export function EmptyState({ title, body, actions, icon }: { title: string; body: string; actions?: ReactNode; icon?: ReactNode }) {
   return (
-    <div className="flex flex-col items-start gap-3 rounded-lg border border-dashed border-line-strong px-6 py-10 sm:items-center sm:text-center">
-      {icon && <div className="text-muted">{icon}</div>}
-      <h3 className="display text-lg">{title}</h3>
-      <p className="max-w-sm text-sm text-muted">{body}</p>
-      {actions && <div className="mt-1 flex flex-wrap gap-2">{actions}</div>}
+    <div className="pf-sheet relative flex flex-col items-start gap-3 overflow-hidden rounded-lg px-6 py-12 sm:items-center sm:text-center">
+      <motion.div
+        initial={{ scale: 2.2, rotate: 12, opacity: 0 }}
+        animate={{ scale: 1, rotate: -10, opacity: 1 }}
+        transition={{ type: 'spring', stiffness: 420, damping: 18, delay: 0.1 }}
+        className="relative grid size-16 place-items-center"
+        aria-hidden
+      >
+        <LogoMark variant="stamp" className="size-16 opacity-90" />
+        {icon && <span className="absolute -bottom-1 -right-2 grid size-8 place-items-center rounded-full bg-lime text-ink [&_svg]:size-4">{icon}</span>}
+      </motion.div>
+      <h3 className="display mt-2 text-xl">{title}</h3>
+      <p className="max-w-sm text-sm text-ink-2">{body}</p>
+      {actions && <div className="mt-2 flex flex-wrap gap-2">{actions}</div>}
     </div>
   )
 }
@@ -224,8 +237,8 @@ export function TableSkeleton({ rows = 5 }: { rows?: number }) {
 
 export function ErrorNotice({ message, onRetry }: { message: string; onRetry?: () => void }) {
   return (
-    <div role="alert" className="flex flex-wrap items-center justify-between gap-3 rounded-md border border-danger/30 bg-danger-soft/50 px-4 py-3 text-sm text-danger">
-      <span>{message}</span>
+    <div role="alert" className="flex flex-wrap items-center justify-between gap-3 rounded-md border-2 border-l-[6px] border-danger/40 border-l-danger bg-danger-soft/60 px-4 py-3 text-sm font-medium text-danger">
+      <span className="flex items-start gap-2"><CircleAlert className="mt-0.5 size-4 shrink-0" aria-hidden />{message}</span>
       {onRetry && <Button size="sm" variant="secondary" onClick={onRetry}>Try again</Button>}
     </div>
   )
