@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { Link, NavLink, Outlet, useLocation } from 'react-router-dom'
+import { Link, NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { motion } from 'motion/react'
 import { BarChart3, Bell, FileText, Home, LogOut, Plus, Settings, Users } from 'lucide-react'
 import { LogoMark, Wordmark } from './Logo'
@@ -18,7 +18,12 @@ const NAV = [
 const PILL = { type: 'spring', stiffness: 520, damping: 38 } as const
 
 export function AppShell() {
-  const { profile, signOut } = useAuth()
+  const { profile, signOut, guest } = useAuth()
+  const navigate = useNavigate()
+  const leave = async () => {
+    await signOut()
+    if (guest) navigate('/', { replace: true })
+  }
   const [activityOpen, setActivityOpen] = useState(false)
   const location = useLocation()
   const mainRef = useRef<HTMLElement>(null)
@@ -39,7 +44,7 @@ export function AppShell() {
 
       {/* Desktop sidebar — the night rail */}
       <aside className="sticky top-0 hidden h-dvh flex-col overflow-hidden bg-night px-4 py-5 text-white/80 lg:flex">
-        <Link to="/dashboard" className="group relative mb-8 flex items-center gap-2.5 px-2">
+        <Link to="/home" aria-label="PayFlow home page" className="group relative mb-8 flex items-center gap-2.5 px-2">
           <motion.span whileHover={{ rotate: -12, scale: 1.08 }} whileTap={{ scale: 0.85 }} transition={PILL} className="inline-flex">
             <LogoMark className="size-8" />
           </motion.span>
@@ -72,7 +77,7 @@ export function AppShell() {
               {initial}
             </span>
             <span className="min-w-0 flex-1 truncate text-sm text-white/80" title={displayName}>{displayName}</span>
-            <button onClick={signOut} aria-label="Log out" title="Log out" className="rounded p-1.5 text-white/50 transition-colors hover:bg-white/10 hover:text-white">
+            <button onClick={leave} aria-label={guest ? 'Leave guest mode' : 'Log out'} title={guest ? 'Leave guest mode' : 'Log out'} className="rounded p-1.5 text-white/50 transition-colors hover:bg-white/10 hover:text-white">
               <LogOut className="size-4" />
             </button>
           </div>
@@ -81,7 +86,7 @@ export function AppShell() {
 
       {/* Mobile top bar */}
       <header className="sticky top-0 z-30 flex h-14 items-center justify-between border-b border-line bg-paper/85 px-4 backdrop-blur-md lg:hidden">
-        <Link to="/dashboard" aria-label="PayFlow home" className="flex items-center gap-2">
+        <Link to="/home" aria-label="PayFlow home page" className="flex items-center gap-2">
           <LogoMark className="size-7" />
           <Wordmark className="text-[15px]" />
         </Link>
@@ -96,6 +101,7 @@ export function AppShell() {
       </header>
 
       <main id="main" ref={mainRef} tabIndex={-1} className="min-w-0 px-4 pb-32 pt-6 outline-none sm:px-6 lg:px-10 lg:pb-16 lg:pt-10">
+        {guest && <GuestBanner onLeave={leave} />}
         <div key={location.pathname} className="pf-page mx-auto max-w-[1120px]">
           <Outlet />
         </div>
@@ -149,5 +155,26 @@ function BottomLink({ to, label, icon: Icon }: (typeof NAV)[number]) {
         </>
       )}
     </NavLink>
+  )
+}
+
+/** Shown on every app screen in guest mode. */
+function GuestBanner({ onLeave }: { onLeave: () => void }) {
+  return (
+    <div role="status" className="sticky top-14 z-20 -mx-4 -mt-6 mb-6 border-b-2 border-ink bg-lime text-ink sm:-mx-6 lg:top-0 lg:-mx-10 lg:-mt-10 lg:mb-10">
+      <div className="mx-auto flex max-w-[1200px] flex-wrap items-center justify-between gap-x-4 gap-y-2 px-4 py-2.5 sm:px-6 lg:px-10">
+        <p className="text-sm font-semibold">
+          <span className="font-extrabold">Guest mode</span> — nothing is saved. Create an account to keep your work.
+        </p>
+        <div className="flex items-center gap-2">
+          <button type="button" onClick={onLeave} className="pf-press rounded-full px-3 py-1.5 text-sm font-semibold underline-offset-4 hover:underline">
+            Leave
+          </button>
+          <Link to="/signup" onPointerDown={ripple} className="pf-press relative isolate inline-flex h-9 items-center overflow-hidden rounded-full bg-ink px-4 text-sm font-bold text-white">
+            Create account
+          </Link>
+        </div>
+      </div>
+    </div>
   )
 }

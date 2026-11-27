@@ -8,7 +8,7 @@
 
 PayFlow is an invoicing and payment-tracking app for freelancers and independent professionals. It follows one lifecycle — *draft → send → get paid* — and every screen exists to move an invoice along it or to show where the money stands.
 
-**Live:** https://payflow-xi-one.vercel.app — sign up, then use *Load sample data* on the overview to explore a fictional workspace.
+**Live:** https://payflow-xi-one.vercel.app — press *Continue as guest* to explore the full app on sample data with no account (nothing is saved), or sign up to keep your own books.
 
 ![PayFlow overview: collected this month, outstanding, overdue and due-soon figures, a needs-attention list and a monthly revenue chart](docs/screenshots/overview-desktop.png)
 
@@ -50,6 +50,7 @@ PayFlow is an invoicing and payment-tracking app for freelancers and independent
 
 ## Features
 
+- **Three ways in** — the link opens the 3D landing page, which offers *Create account*, *Log in* and *Continue as guest* (in the hero, in “How it works” and on the auth pages). Guest is one click: the full app on a realistic sample workspace, kept only in the browser tab (sessionStorage) and never written to Supabase, with a banner that says so. Signed-in users still land on their dashboard; the logo always leads back to the landing page.
 - **Real accounts** — Supabase Auth (email + password, password reset, persistent sessions). Every row is protected by Postgres Row Level Security.
 - **Clients** — create, edit, search, sort, archive (clients with invoices are never hard-deleted). Each client page shows billed / paid / outstanding and the full invoice and payment history.
 - **Invoice editor** — client, dates with due-date presets, dynamic line items (add, remove, reorder; stacked layout on phones), percent or fixed discount, configurable tax name and rate, payment terms, notes, live totals and a client-view preview.

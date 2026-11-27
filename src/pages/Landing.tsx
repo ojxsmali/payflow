@@ -1,11 +1,13 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react'
 import { Link } from 'react-router-dom'
 import { AnimatePresence, motion, useDragControls, useMotionValue, useScroll, useSpring, useTransform } from 'motion/react'
-import { ArrowRight, ArrowUpRight, MousePointerClick } from 'lucide-react'
+import { ArrowUpRight, MousePointerClick } from 'lucide-react'
 import { LogoMark, Wordmark } from '../components/layout/Logo'
 import { StatusBadge } from '../components/ui'
-import { Magnetic, PullCard, Reveal, Word } from '../components/motion'
+import { PullCard, Reveal, Word } from '../components/motion'
 import { Press3D } from '../components/three/Scene3D'
+import { EntryActions } from '../components/EntryActions'
+import { useAuth } from '../auth/AuthProvider'
 import { FlatPress } from '../components/brand/FlatPress'
 import { formatMoney } from '../lib/money'
 import { EXAMPLE_ITEMS, EXAMPLE_TOTALS, LIFECYCLE, type PressInvoice } from '../lib/showcase'
@@ -62,12 +64,8 @@ export function LandingPage() {
   )
 }
 
-const primaryCta =
-  'pf-press group relative isolate inline-flex h-13 items-center justify-center gap-2 overflow-hidden whitespace-nowrap rounded-full bg-accent px-7 text-[15px] font-bold text-white shadow-[var(--shadow-violet)] transition-[background-color,transform] duration-300 ease-[var(--ease-spring)] hover:bg-accent-hover'
-const secondaryCta =
-  'pf-press inline-flex h-13 items-center justify-center whitespace-nowrap rounded-full border-2 border-ink px-7 text-[15px] font-semibold text-ink transition-colors hover:bg-ink hover:text-white'
-
 function Nav() {
+  const { session, guest } = useAuth()
   return (
     <header className="sticky top-0 z-40 border-b border-line bg-paper/85 backdrop-blur-md">
       <div className={`${FRAME} flex h-16 items-center justify-between gap-4`}>
@@ -89,13 +87,21 @@ function Nav() {
               </a>
             ),
           )}
-          <Link to="/login" className="inline-flex h-9 items-center whitespace-nowrap rounded px-2 font-semibold text-ink-2 transition-colors hover:text-ink sm:px-3">
-            Log in
-          </Link>
-          <Link to="/signup" onPointerDown={ripple} className="pf-press relative isolate ml-1 inline-flex h-9 items-center gap-1 overflow-hidden whitespace-nowrap rounded-full bg-ink px-4 font-bold text-white transition-transform duration-300 ease-[var(--ease-spring)]">
-            <span className="sm:hidden">Sign up</span>
-            <span className="max-sm:hidden">Create account</span> <ArrowUpRight className="size-4" aria-hidden />
-          </Link>
+          {session || guest ? (
+            <Link to="/dashboard" onPointerDown={ripple} className="pf-press relative isolate ml-1 inline-flex h-9 items-center gap-1 overflow-hidden whitespace-nowrap rounded-full bg-ink px-4 font-bold text-white transition-transform duration-300 ease-[var(--ease-spring)]">
+              {guest ? 'Back to the app' : 'Dashboard'} <ArrowUpRight className="size-4" aria-hidden />
+            </Link>
+          ) : (
+            <>
+              <Link to="/login" className="inline-flex h-9 items-center whitespace-nowrap rounded px-2 font-semibold text-ink-2 transition-colors hover:text-ink sm:px-3">
+                Log in
+              </Link>
+              <Link to="/signup" onPointerDown={ripple} className="pf-press relative isolate ml-1 inline-flex h-9 items-center gap-1 overflow-hidden whitespace-nowrap rounded-full bg-ink px-4 font-bold text-white transition-transform duration-300 ease-[var(--ease-spring)]">
+                <span className="sm:hidden">Sign up</span>
+                <span className="max-sm:hidden">Create account</span> <ArrowUpRight className="size-4" aria-hidden />
+              </Link>
+            </>
+          )}
         </nav>
       </div>
     </header>
@@ -133,18 +139,12 @@ function Hero() {
           <p className="max-w-md text-lg leading-relaxed text-ink-2">
             Create an invoice, send it as a PDF or a private link, record payments as they arrive — and always know exactly what’s still owed.
           </p>
-          <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
-            <Magnetic className="inline-flex max-sm:w-full">
-              <Link to="/signup" onPointerDown={ripple} className={`${primaryCta} w-full sm:w-auto`}>
-                Start invoicing — free <ArrowRight className="size-4 transition-transform duration-300 group-hover:translate-x-1" aria-hidden />
-              </Link>
-            </Magnetic>
-            <a href="#product" className={secondaryCta}>
-              See the product
-            </a>
-          </div>
         </motion.div>
       </div>
+
+      <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.65, duration: 0.8, ease: [0.16, 1, 0.3, 1] }} className="mt-8">
+        <EntryActions />
+      </motion.div>
 
       <PressBed />
     </section>
@@ -282,6 +282,15 @@ function Lifecycle() {
           </li>
         ))}
       </ol>
+      <Reveal className="mt-14">
+        <div className="flex flex-col gap-6 rounded-[22px] bg-night p-6 text-white sm:p-8 lg:flex-row lg:items-center lg:justify-between">
+          <div>
+            <p className="pf-label !text-lime">Three ways in</p>
+            <p className="pf-display mt-3 text-[clamp(1.6rem,3vw,2.4rem)]">Try it now — or keep your books for real.</p>
+          </div>
+          <EntryActions dark className="lg:shrink-0" />
+        </div>
+      </Reveal>
       <div className="mt-16 sm:mt-20">
         <InvoiceStage />
       </div>
@@ -592,16 +601,7 @@ function Closing() {
           <h2 id="closing-title" className="pf-display max-w-[14ch] text-[clamp(2.3rem,5.6vw,5.5rem)]">
             Send your first invoice <span className="pf-hl">in a few minutes.</span>
           </h2>
-          <div className="mt-10 flex flex-col gap-3 sm:flex-row">
-            <Magnetic className="inline-flex max-sm:w-full">
-              <Link to="/signup" onPointerDown={ripple} className={`${primaryCta} w-full sm:w-auto`}>
-                Create a free account <ArrowRight className="size-4 transition-transform duration-300 group-hover:translate-x-1" aria-hidden />
-              </Link>
-            </Magnetic>
-            <Link to="/login" className={secondaryCta}>
-              Log in
-            </Link>
-          </div>
+          <EntryActions className="mt-10" />
         </Reveal>
         <div className="flex justify-center lg:col-span-5" aria-hidden>
           <motion.div

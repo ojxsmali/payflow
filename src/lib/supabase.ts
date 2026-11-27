@@ -13,5 +13,6 @@ export const supabase = createClient(url || 'http://localhost:54321', anonKey ||
 
 export function logoUrl(path: string | null | undefined) {
   if (!path) return null
+  if (path.startsWith('data:')) return path // guest-mode logo, kept in the tab
   return supabase.storage.from('logos').getPublicUrl(path).data.publicUrl
 }

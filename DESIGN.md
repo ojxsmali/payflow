@@ -69,6 +69,10 @@ PDF invoices keep their embedded IBM Plex fonts.
 
 Everything respects `prefers-reduced-motion` through `<MotionConfig reducedMotion="user">` and CSS. Data never waits on an animation to become visible. Light theme only.
 
+## Entry flow (shared with FinTrack and Financial Intelligence)
+
+The link always opens the 3D landing page. Three actions — **Create account** (violet), **Log in** (outline) and **Continue as guest** (lime) — appear in the hero, in a dark "Three ways in" band under *How it works*, in the closing section, and as "or continue as guest" on the log-in and sign-up pages (`src/components/EntryActions.tsx`). Guest mode (`src/guest/store.ts`) serves the same service API from sessionStorage with the database's own rules; a lime banner on every app screen says nothing is saved and offers *Create account*. The app logo leads to `/home` (the landing page) for everyone.
+
 ## Layout
 
 Landing and brand kit: 1400px frame, `clamp(16px, 3vw, 40px)` gutter. App: 248px ink sidebar on desktop, floating ink tab bar on phones. Checked at 1440, 768 and 375 px with no horizontal overflow.

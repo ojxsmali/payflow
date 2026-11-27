@@ -6,6 +6,7 @@ import { Button, ErrorNotice, Field, Input } from '../components/ui'
 import { Logo, LogoMark, Wordmark } from '../components/layout/Logo'
 import { Press3D } from '../components/three/Scene3D'
 import { FlatPress } from '../components/brand/FlatPress'
+import { GuestDivider } from '../components/EntryActions'
 import { useAuth } from '../auth/AuthProvider'
 
 function AuthLayout({ title, subtitle, children, footer }: { title: string; subtitle?: string; children: ReactNode; footer?: ReactNode }) {
@@ -73,6 +74,7 @@ export function LoginPage() {
         <div className="-mt-1 text-right"><Link to="/reset-password" className="link text-sm">Forgot password?</Link></div>
         <Button variant="primary" type="submit" loading={busy} disabled={!email || !password}>Log in</Button>
       </form>
+      <GuestDivider />
     </AuthLayout>
   )
 }
@@ -120,6 +122,7 @@ export function SignupPage() {
         </Field>
         <Button variant="primary" type="submit" loading={busy} disabled={!email || !password || !name}>Create account</Button>
       </form>
+      <GuestDivider />
     </AuthLayout>
   )
 }

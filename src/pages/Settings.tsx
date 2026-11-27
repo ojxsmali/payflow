@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom'
 import { useRef, useState, type FormEvent, type ReactNode } from 'react'
 import { ImagePlus, LogOut, Trash2 } from 'lucide-react'
 import { useAuth, useProfile } from '../auth/AuthProvider'
@@ -280,7 +281,8 @@ function SampleSection() {
 }
 
 function AccountSection() {
-  const { session, signOut } = useAuth()
+  const { session, signOut, guest } = useAuth()
+  const navigate = useNavigate()
   const toast = useToast()
   const [sent, setSent] = useState(false)
   async function resetPassword() {
@@ -290,6 +292,16 @@ function AccountSection() {
     if (error) toast(humanError(error), 'error')
     else setSent(true)
   }
+  if (guest)
+    return (
+      <SettingsSection id="account" title="Account">
+        <p className="text-sm text-ink-2">You’re using PayFlow as a guest. Everything here lives in this browser tab and disappears when you close it — nothing is sent to our database.</p>
+        <div className="mt-4 flex flex-wrap gap-2">
+          <Button variant="primary" to="/signup">Create an account</Button>
+          <Button variant="ghost" icon={<LogOut className="size-4" />} onClick={async () => { await signOut(); navigate('/', { replace: true }) }}>Leave guest mode</Button>
+        </div>
+      </SettingsSection>
+    )
   return (
     <SettingsSection id="account" title="Account">
       <dl className="text-sm"><dt className="label">Signed in as</dt><dd className="mt-0.5">{session?.user.email}</dd></dl>

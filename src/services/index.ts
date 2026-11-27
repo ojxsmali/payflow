@@ -1,8 +1,10 @@
 // Data access. Every Supabase call in the app lives in this file; components
-// only call these functions. RLS scopes every read to the signed-in user, and
+// only call these functions. In guest mode the same functions are served by the
+// in-tab store in src/guest/store.ts, so nothing is ever written to Supabase. RLS scopes every read to the signed-in user, and
 // invoice/payment writes go through database functions (see the migration).
 
 import { supabase } from '../lib/supabase'
+import { guestActivity, guestClients, guestInvoices, guestPayments, guestProfile, guestSample, isGuest } from '../guest/store'
 import type {
   Client, ClientInput, Invoice, InvoiceDocumentData, InvoiceDraft, InvoiceEvent, InvoiceItem, InvoiceRow,
   Payment, PaymentMethod, Profile,
@@ -14,7 +16,7 @@ function must<T>(res: { data: T | null; error: unknown }): T {
 }
 
 // ── profile ─────────────────────────────────────────────────────────────────
-export const profileService = {
+const remote_profileService = {
   async get(): Promise<Profile> {
     return must(await supabase.from('profiles').select('*').single())
   },
@@ -33,7 +35,7 @@ export const profileService = {
 }
 
 // ── clients ─────────────────────────────────────────────────────────────────
-export const clientService = {
+const remote_clientService = {
   async list(): Promise<Client[]> {
     return must(await supabase.from('clients').select('*').order('name'))
   },
@@ -56,7 +58,7 @@ export const clientService = {
 }
 
 // ── invoices ────────────────────────────────────────────────────────────────
-export const invoiceService = {
+const remote_invoiceService = {
   async list(): Promise<InvoiceRow[]> {
     return must(await supabase.from('invoice_overview').select('*').order('issue_date', { ascending: false }).order('invoice_number', { ascending: false }))
   },
@@ -94,7 +96,7 @@ export const invoiceService = {
 }
 
 // ── payments ────────────────────────────────────────────────────────────────
-export const paymentService = {
+const remote_paymentService = {
   async listForInvoice(invoiceId: string): Promise<Payment[]> {
     return must(await supabase.from('payments').select('*').eq('invoice_id', invoiceId).order('paid_on').order('created_at'))
   },
@@ -113,14 +115,14 @@ export const paymentService = {
 }
 
 // ── activity ────────────────────────────────────────────────────────────────
-export const activityService = {
+const remote_activityService = {
   async recent(limit = 25): Promise<(InvoiceEvent & { invoices: Pick<Invoice, 'invoice_number' | 'currency'> | null })[]> {
     return must(await supabase.from('invoice_events').select('*, invoices(invoice_number, currency)').order('created_at', { ascending: false }).limit(limit))
   },
 }
 
 // ── sample data ─────────────────────────────────────────────────────────────
-export const sampleService = {
+const remote_sampleService = {
   async load() {
     must(await supabase.rpc('load_sample_data'))
   },
@@ -130,7 +132,7 @@ export const sampleService = {
 }
 
 // ── email (server function in api/send-invoice.ts) ─────────────────────────
-export const emailService = {
+const remote_emailService = {
   async status(): Promise<{ configured: boolean; from?: string }> {
     try {
       const res = await fetch('/api/send-invoice')
@@ -154,3 +156,30 @@ export const emailService = {
     return body as { id: string; to: string }
   },
 }
+
+// ── guest dispatch ──────────────────────────────────────────────────────────
+/** Same API either way: methods resolve to the guest store while a guest session is active. */
+function dual<T extends object>(remote: T, guest: Partial<T>): T {
+  return new Proxy(remote, {
+    get(target, key) {
+      if (isGuest() && key in guest) return (guest as Record<PropertyKey, unknown>)[key]
+      return (target as Record<PropertyKey, unknown>)[key]
+    },
+  })
+}
+
+export const profileService = dual(remote_profileService, guestProfile)
+export const clientService = dual(remote_clientService, guestClients)
+export const invoiceService = dual(remote_invoiceService, guestInvoices)
+export const paymentService = dual(remote_paymentService, guestPayments)
+export const activityService = dual(remote_activityService, guestActivity as Partial<typeof remote_activityService>)
+export const sampleService = dual(remote_sampleService, guestSample)
+export const emailService = dual(remote_emailService, {
+  // Guests can't send email; the app falls back to copy link / mark as sent.
+  async status() {
+    return { configured: false }
+  },
+  async send(): Promise<{ id: string; to: string }> {
+    throw Object.assign(new Error('Email is off in guest mode. Create an account to send invoices by email.'), { code: '22023' })
+  },
+})

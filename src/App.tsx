@@ -45,10 +45,10 @@ function FullFallback() {
 }
 
 function RequireAuth({ children }: { children: ReactNode }) {
-  const { session, profile, ready } = useAuth()
+  const { session, guest, profile, ready } = useAuth()
   const location = useLocation()
   if (!ready) return <FullFallback />
-  if (!session) return <Navigate to="/login" replace state={{ from: location.pathname }} />
+  if (!session && !guest) return <Navigate to="/login" replace state={{ from: location.pathname }} />
   if (!profile) return <FullFallback />
   if (!profile.onboarded_at && location.pathname !== '/welcome') return <Navigate to="/welcome" replace />
   return <>{children}</>
@@ -61,7 +61,7 @@ function PublicOnly({ children }: { children: ReactNode }) {
   return <>{children}</>
 }
 
-/** Signed in → the app. Signed out → the public product page. */
+/** Signed in → the app. Signed out or guest → the public product page (it offers all three ways in). */
 function Root() {
   const { session, ready } = useAuth()
   if (!ready) return <FullFallback />
@@ -79,6 +79,8 @@ export function App() {
           <Suspense fallback={<FullFallback />}>
             <Routes>
               <Route path="/" element={<Root />} />
+              {/* the logo in the app leads here, so everyone can get back to the landing page */}
+              <Route path="/home" element={<LandingPage />} />
               <Route path="/login" element={<PublicOnly><LoginPage /></PublicOnly>} />
               <Route path="/signup" element={<PublicOnly><SignupPage /></PublicOnly>} />
               <Route path="/reset-password" element={<PublicOnly><ResetPasswordPage /></PublicOnly>} />

@@ -4,12 +4,16 @@ import { supabase } from '../lib/supabase'
 import { profileService } from '../services'
 import type { Profile } from '../types'
 import { invalidate } from '../hooks/useLoad'
+import { endGuest, isGuest, startGuest as openGuest } from '../guest/store'
 
 interface AuthState {
   session: Session | null
   profile: Profile | null
   ready: boolean
   recovering: boolean
+  /** Guest mode: the full app on an in-tab sample workspace; nothing is saved. */
+  guest: boolean
+  startGuest: () => void
   refreshProfile: () => Promise<void>
   setProfile: (p: Profile) => void
   signOut: () => Promise<void>
@@ -22,6 +26,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [profile, setProfile] = useState<Profile | null>(null)
   const [ready, setReady] = useState(false)
   const [recovering, setRecovering] = useState(false)
+  const [guest, setGuest] = useState(() => isGuest())
 
   const refreshProfile = useCallback(async () => {
     try {
@@ -35,8 +40,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     let alive = true
     supabase.auth.getSession().then(async ({ data }) => {
       if (!alive) return
+      if (data.session && isGuest()) {
+        // a real account always wins over a leftover guest tab
+        endGuest()
+        setGuest(false)
+      }
       setSession(data.session)
-      if (data.session) await refreshProfile()
+      if (data.session || isGuest()) await refreshProfile()
       setReady(true)
     })
     const { data: sub } = supabase.auth.onAuthStateChange((event, s) => {
@@ -46,6 +56,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setRecovering(false)
       }
       setSession(s)
+      if (event === 'SIGNED_IN' && isGuest()) {
+        endGuest()
+        setGuest(false)
+      }
       if (event === 'SIGNED_IN' || event === 'USER_UPDATED') {
         // defer: supabase-js warns against awaiting inside this callback
         setTimeout(() => {
@@ -60,12 +74,25 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }, [refreshProfile])
 
+  const startGuest = useCallback(() => {
+    setProfile(openGuest())
+    setGuest(true)
+    invalidate()
+  }, [])
+
   const signOut = useCallback(async () => {
+    if (isGuest()) {
+      endGuest()
+      setGuest(false)
+      setProfile(null)
+      invalidate()
+      return
+    }
     await supabase.auth.signOut()
   }, [])
 
   return (
-    <AuthContext.Provider value={{ session, profile, ready, recovering, refreshProfile, setProfile, signOut }}>
+    <AuthContext.Provider value={{ session, profile, ready, recovering, guest, startGuest, refreshProfile, setProfile, signOut }}>
       {children}
     </AuthContext.Provider>
   )
